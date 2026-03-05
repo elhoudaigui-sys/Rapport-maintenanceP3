@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+<title>Rapport Maintenance</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #0a0a0a; color: #fff; }
+
+#login-page {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 100vh; padding: 24px;
+}
+.login-box {
+  background: #111; border: 1px solid #1c2535; border-radius: 16px;
+  padding: 32px 24px; width: 100%; max-width: 400px; text-align: center;
+}
+.login-logo { font-size: 48px; margin-bottom: 16px; }
+.login-title { color: #00d4ff; font-size: 22px; font-weight: bold; margin-bottom: 6px; letter-spacing: 1px; }
+.login-subtitle { color: #888; font-size: 14px; margin-bottom: 28px; }
+.login-box input {
+  width: 100%; background: #1a1a2e; border: 2px solid #2a3550; border-radius: 10px;
+  color: #fff; font-size: 20px; padding: 16px; font-family: Arial, sans-serif;
+  text-align: center; letter-spacing: 3px; margin-bottom: 16px;
+  -webkit-appearance: none; appearance: none;
+}
+.login-box input:focus { outline: none; border-color: #00d4ff; background: #1e2540; }
+.login-btn {
+  width: 100%; padding: 18px; background: linear-gradient(135deg, #00d4ff, #0099cc);
+  color: #000; font-size: 18px; font-weight: 900; border: none; border-radius: 12px;
+  cursor: pointer; letter-spacing: 1px;
+}
+.login-btn:active { opacity: 0.85; }
+.login-error {
+  display: none; background: rgba(192,57,43,0.15); border: 1px solid #c0392b;
+  color: #e74c3c; border-radius: 8px; padding: 12px; font-size: 14px; margin-top: 14px;
+}
+#app-page { display: none; }
+</style>
+</head>
+<body>
+
+<div id="login-page">
+  <div class="login-box">
+    <div class="login-logo">🔒</div>
+    <div class="login-title">RAPPORT MAINTENANCE</div>
+    <div class="login-subtitle">Entrez votre mot de passe pour acceder</div>
+    <input type="password" id="pwd-input" placeholder="Mot de passe" onkeydown="if(event.key==='Enter') checkLogin()" />
+    <button class="login-btn" onclick="checkLogin()">✅ ACCEDER</button>
+    <div class="login-error" id="login-error">❌ Mot de passe incorrect. Contactez votre superviseur.</div>
+  </div>
+</div>
+
+<div id="app-page">
+
+<h1>🔧 RAPPORT MAINTENANCE</h1>
+
+<!-- BLOC 1 : Technicien -->
+<div class="bloc">
+  <div class="bloc-titre">👤 Technicien &amp; Date</div>
+  <label>Nom du Technicien *</label>
+  <select id="tech" onchange="majMsg()">
+    <option value="">— Sélectionner —</option>
+    <option>Yassin Ben Amar</option><option>Jaouhar Ahmed</option><option>Mounir</option>
+    <option>Abdenaser</option><option>Benkassem</option><option>Abdesamad</option>
+    <option>Abdeouakil</option><option>Redouane</option><option>Louizy</option>
+    <option>Mouhsin Zemour</option><option>Essebahi</option><option>Yassin Ahmadi</option>
+    <option>Ayoub</option><option>Zakaria</option><option>Yassine Fartaj</option>
+    <option>Hamid</option><option>Melloul</option><option>Abdslam</option>
+    <option>Ikram</option><option>El Fassi</option><option>Jaoui</option>
+    <option>Ihya</option><option>Khlinssi</option><option>Elamrani</option>
+    <option>Abdali</option><option>Jaouad</option>
+  </select>
+  <label>Date</label>
+  <input type="date" id="date" onchange="majMsg()">
+</div>
+
+<!-- BLOC 2 : Saisie arrêt -->
+<div class="bloc">
+  <div class="bloc-titre">⚙️ Saisir un Arrêt</div>
+
+  
+  <!-- ═══ CODE ÉQUIPEMENT EN CASCADE ═══ -->
+  <div style="background:#0a1628;border:3px solid #25d366;border-radius:12px;padding:14px;margin-bottom:12px;">
+    <div style="font-size:13px;color:#25d366;font-weight:700;letter-spacing:1px;margin-bottom:10px;">⚙️ CODE INVENTAIRE ÉQUIPEMENT *</div>
+
+    <!-- Sélection (masquée après choix) -->
+    <div id="selection-bloc">
+      <label style="color:#aaa;font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:5px;display:block;">Étape 1 — Type d'équipement (préfixe)</label>
+      <select id="sel-prefix" style="width:100%;font-size:16px;font-weight:700;padding:14px;background:#0d1a2e;color:#f39c12;border:2px solid #f39c12;border-radius:8px;margin-bottom:10px;" onchange="onPrefixSelect(this.value)">
+        <option value="">— Choisir le type —</option>
+        <option value="3CB">3CB (Test Électrique)</option>
+        <option value="CLC">CLC (Clip Checker)</option>
+        <option value="1RG">1RG (Schunk)</option>
+        <option value="2FA">2FA (Mecalbi)</option>
+        <option value="2ED">2ED (Kabatec)</option>
+        <option value="3CC">3CC (T-Protec)</option>
+        <option value="3DB">3DB (Tab Viss)</option>
+        <option value="3DC">3DC (TV)</option>
+        <option value="2AC">2AC (Rotary Line)</option>
+        <option value="JC">JC (Jig Checker)</option>
+        <option value="2BE">2BE (Expander)</option>
+        <option value="2JA">2JA (Jigboard)</option>
+        <option value="2KA">2KA (Presse Bouchon)</option>
+        <option value="3AA">3AA (Traction C-TEC)</option>
+        <option value="3HA">3HA (Test Etanchéité)</option>
+        <option value="4OA">4OA (Printer)</option>
+        <option value="AC">AC</option>
+      </select>
+
+      <div id="step2-bloc" style="display:none;">
+        <label style="color:#aaa;font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:8px;display:block;">Étape 2 — Projet</label>
+        <div id="projet-tabs" style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;"></div>
+        <label style="color:#aaa;font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:8px;display:block;">Étape 3 — Choisir l'équipement</label>
+        <select id="sel-code" style="width:100%;font-size:10px;font-weight:600;padding:8px;background:#0d1a2e;color:#25d366;border:2px solid #25d366;border-radius:8px;letter-spacing:0px;" onchange="onCodeSelect(this.value)">
+          <option value="">— Choisir le numéro —</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Résumé (affiché après choix, sélection masquée) -->
+    <div id="eq-result" style="display:none;margin-top:4px;">
+      <div style="background:#071a07;border:2px solid #25d366;border-radius:8px;padding:12px;text-align:center;">
+        <div style="color:#888;font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:4px;">✅ Équipement sélectionné</div>
+        <div id="r-code" style="color:#25d366;font-size:22px;font-weight:900;font-family:monospace;letter-spacing:2px;"></div>
+        <div id="r-nom" style="color:#f39c12;font-size:13px;font-weight:700;margin-top:4px;"></div>
+        <div style="margin-top:8px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+          <span style="background:#0d1a2e;border:1px solid #00d4ff;color:#00d4ff;border-radius:6px;padding:4px 12px;font-size:13px;font-weight:700;" id="r-proj-badge"></span>
+          <span style="background:#0d1a2e;border:1px solid #a855f7;color:#c084fc;border-radius:6px;padding:4px 12px;font-size:13px;font-weight:700;" id="r-fam-badge"></span>
+        </div>
+      </div>
+      <button type="button" onclick="resetCode()" style="margin-top:10px;background:transparent;border:1px solid #c0392b;color:#e74c3c;border-radius:6px;padding:10px;font-size:13px;width:100%;font-weight:700;">✏️ Corriger / Changer l'équipement</button>
+    </div>
+
+    <!-- Champs cachés compatibilité JS -->
+    <input type="text" id="r-proj-input" style="display:none;">
+    <input type="text" id="r-fam-input" style="display:none;">
+    <input type="text" id="r-type-input" style="display:none;">
+  </div>
+
+  <input type="hidden" id="equip"    value="">
+  <input type="hidden" id="nom-equip" value="">
+  <input type="hidden" id="projet"   value="">
+  <input type="hidden" id="famille"  value="">
+
+
+  <input type="hidden" id="type_equip" value="">
+
+  <!-- CP + NATURE : visible uniquement pour Test Élec (3CB), CLC, JC -->
+  <div id="bloc-cp-nature" style="display:none;">
+  <label>N° CP *</label>
+  <select id="cp-choix" onchange="toggleCP()" style="margin-bottom:8px;">
+    <option value="">— Sélectionner —</option>
+    <option value="N/A">N/A — Non applicable</option>
+    <option value="num">Numéro de CP...</option>
+  </select>
+  <div id="cp-num-bloc" style="display:none;">
+    <input type="text" id="cp-num" placeholder="Ex: CP 134AF, CP 001..." oninput="majMsg()" style="text-transform:uppercase;margin-bottom:12px;">
+    <label style="display:block;font-size:12px;font-weight:700;color:#f39c12;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">&#x1F527; Nature du problème *</label>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <button type="button" class="btn-nature" onclick="selectNature(this,'Fil coupé')">Fil coupé</button>
+      <button type="button" class="btn-nature" onclick="selectNature(this,'Pin cassé')">Pin cassé</button>
+      <button type="button" class="btn-nature" onclick="selectNature(this,'Microswitch endom.')">Microswitch endom.</button>
+      <button type="button" class="btn-nature" onclick="selectNature(this,'Activation CP')">Activation CP</button>
+      <button type="button" class="btn-nature" onclick="selectNature(this,'Led endommagé')">Led endommagé</button>
+      <button type="button" class="btn-nature" onclick="selectNature(this,'PC planté')">PC planté</button>
+      <button type="button" class="btn-nature" onclick="selectNature(this,'Pb Etanchéité')">Pb Etanchéité</button>
+      <button type="button" class="btn-nature" onclick="selectNature(this,'Rack brûlé')">Rack brûlé</button>
+      <button type="button" class="btn-nature" onclick="selectNature(this,'Court-circuit')">Court-circuit</button>
+      <button type="button" class="btn-nature" onclick="selectNature(this,'PC éteint')">PC éteint</button>
+      <button type="button" class="btn-nature" onclick="selectNature(this,'Spacer open')">Spacer open</button>
+      <button type="button" class="btn-nature" onclick="selectNature(this,'Spacer closed')">Spacer closed</button>
+      <button type="button" class="btn-nature" onclick="selectNature(this,'Autres')">Autres</button>
+    </div>
+    <input type="hidden" id="nature-pb" value="">
+  </div>
+  <input type="hidden" id="cp" value="">
+  </div><!-- fin bloc-cp-nature -->
+
+  <label id="label-pb">Problème constaté : Commentaire *</label>
+  <textarea id="pb" placeholder="Décrivez le problème..."></textarea>
+
+  <label>Solution / Action effectuée *</label>
+  <textarea id="sol" placeholder="Décrivez la solution..."></textarea>
+
+  <div class="row2" style="margin-top:12px;">
+    <div>
+      <label>Heure Début *</label>
+      <input type="text" id="hdebut" placeholder="HH:MM" maxlength="5" inputmode="numeric" oninput="formatHeure(this)" onblur="validerHeures();updateRTPreview();" style="font-size:20px;text-align:center;padding:14px;letter-spacing:2px;">
+    </div>
+    <div>
+      <label>Heure Fin *</label>
+      <input type="text" id="hfin" placeholder="HH:MM" maxlength="5" inputmode="numeric" oninput="formatHeure(this)" onblur="validerHeures();updateRTPreview();" style="font-size:20px;text-align:center;padding:14px;letter-spacing:2px;">
+    </div>
+  </div>
+  <div id="alerte-heures" style="display:none;background:rgba(192,57,43,0.15);border:1px solid #c0392b;color:#e74c3c;border-radius:8px;padding:10px;font-size:13px;text-align:center;margin-top:8px;">
+    ⚠️ Heure Fin ne peut pas être avant Heure Début !
+  </div>
+
+  <label>⏳ Waiting Time (min) *</label>
+  <input type="number" id="wt" placeholder="0" min="0" oninput="majMsg()" style="font-size:18px;text-align:center;padding:12px;letter-spacing:1px;">
+  <div id="rt-display" style="display:none;background:rgba(0,212,255,0.08);border:1px solid #00d4ff;border-radius:8px;padding:10px;font-size:13px;text-align:center;margin-top:8px;color:#00d4ff;">
+    🔧 Repair Time : <strong id="rt-value">—</strong>
+  </div>
+
+  <div class="row2">
+    <div>
+      <label>Effect (Effectifs) *</label>
+      <input type="number" id="effect" placeholder="0" min="0">
+    </div>
+    <div>
+      <label>Statut</label>
+      <select id="statut">
+        <option value="Resolu">Résolu</option>
+        <option value="En cours">En cours</option>
+        <option value="Escalade">Escalade</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="alerte-form" class="alerte">⚠️ Tous les champs sont obligatoires ! Remplis tout avant d'ajouter.</div>
+
+  <button id="btn-ajouter" onclick="ajouterArret()">➕ AJOUTER CET ARRÊT</button>
+</div>
+
+<!-- Liste des arrêts enregistrés -->
+<div id="compteur"></div>
+<div id="liste-arrets"></div>
+
+<!-- BLOC ENVOI -->
+<div class="bloc">
+  <div class="bloc-titre">📲 Envoyer au Superviseur</div>
+  <button id="wa-btn" onclick="envoyerWhatsApp()">📲 ENVOYER SUR WHATSAPP</button>
+  <div class="sep">--- OU COPIER LE MESSAGE ---</div>
+  <textarea id="zone-msg" readonly onclick="this.select();this.setSelectionRange(0,99999);">Ajoute au moins un arrêt pour générer le message...</textarea>
+  <button id="btn-copier" onclick="copier()">📋 COPIER LE MESSAGE</button>
+  <div id="msg-copie">COPIE OK !<br>Ouvre WhatsApp - Nouveau message - Colle - Envoie au superviseur</div>
+</div>
+
+<script>
+
+var PHONE = '212674501051';
+var arrets = [];
+
+var EQ=[["2FA-3477","MECALBI","K0","IP1"],["2FA-3400","MECALBI","K0","IP1"],["2FA-3401","MECALBI","K0","PPL2"],["2FA-3419","MECALBI","K0","PPL2"],["1RG-3504","SCHUNK","K0","PPL3"],["1RG-3402","SCHUNK","K0","PPL1"],["1RG-3437","SCHUNK","K0","PPL2"],["3AA-3021","Traction C-TEC","XJX","Mbloc1"],["3AA-3029","Traction","K0","IP1"],["3AA-3030","Traction C-TEC","DPe","PPL3"],["3AA-3031","Traction","K0","PPL1"],["1RG-3525","SCHUNK","K0","IP1"],["2AC-3004","ROTARY_LINE","K0","IP1"],["1RG-3468","SCHUNK","K0","IP1"],["2FA-3510","MECALBI","K0","IP1"],["3AA-3042","Traction C-TEC","XJX","Mbloc5"],["1RG-3487","SCHUNK","K0","IP1"],["1RG-3488","SCHUNK","K0","IP1"],["2ED-3010","KABATEC","K0","IP1"],["3CB-3197","TE","K0","IP1"],["CLC-170","CLIP_CHECKER","K0","IP1"],["CLC-171","CLIP_CHECKER","K0","IP1"],["2ED-3011","KABATEC","K0","IP1"],["2ED-3275","KABATEC","K0","IP1"],["2ED-3016","KABATEC","K0","IP1"],["2AC-3164","ROTARY_LINE","K0","IP2"],["3CB-3204","TE","K0","IP2"],["CLC-174","CLIP_CHECKER","K0","IP2"],["CLC-175","CLIP_CHECKER","K0","IP2"],["1RG-3491","SCHUNK","K0","IP2"],["1RG-3492","SCHUNK","K0","PPL1"],["2ED-3018","KABATEC","K0","IP2"],["2ED-3111","KABATEC","K0","IP2"],["2FA-3481","MECALBI","K0","IP2"],["1RG-3494","SCHUNK","XJX","Mbloc1"],["1RG-3496","SCHUNK","XJX","Mbloc1"],["2AC-3166","ROTARY_LINE","K0","PPL1"],["3CB-3206","TE","K0","PPL1"],["CLC-177","CLIP_CHECKER","K0","PPL1"],["3DC-3063","TV","K0","PPL1"],["3DC-3064","TV","K0","PPL1"],["1RG-3497","SCHUNK","K0","PPL1"],["1RG-3498","SCHUNK","K0","PPL1"],["2FA-3483","MECALBI","K0","PPL1"],["2FA-3484","MECALBI","K0","PPL1"],["2FA-3485","MECALBI","K0","PPL2"],["2ED-3021","KABATEC","K0","PPL1"],["3HA-3022","TEST_ETANCHIETE","K0","PPL1"],["3CC-3005","T-PROTEC","K0","PPL1"],["3HA-3023","TEST_ETANCHIETE","K0","PPL1"],["2FA-3489","MECALBI","XJX","Mbloc1"],["1RG-3408","SCHUNK","K0","Hab1"],["1RG-3409","SCHUNK","K0","Hab1"],["1RG-3410","SCHUNK","K0","Hab1"],["CLC-178","CLIP_CHECKER","K0","Hab1"],["CLC-179","CLIP_CHECKER","K0","Hab1"],["1RG-3439","SCHUNK","K0","IP2"],["2AC-3017","ROTARY_LINE","K0","Hab1"],["3CB-3207","TE","K0","Hab1"],["3DC-3065","TV","K0","Hab1"],["3CC-3009","T-PROTEC","K0","Hab1"],["3CB-3210","TE","K0","PPL2"],["CLC-181","CLIP_CHECKER","K0","PPL2"],["3CC-3010","T-PROTEC","K0","PPL2"],["3HA-3024","TEST_ETANCHIETE","K0","PPL2"],["2AC-3018","ROTARY_LINE","K0","PPL2"],["3DC-3066","TV","K0","PPL2"],["3DB-3003","TAB_VISS","K0","PPL2"],["1RG-3412","SCHUNK","K0","PPL2"],["1RG-3419","SCHUNK","K0","PPL2"],["1RG-3413","SCHUNK","K0","PPL2"],["2ED-3028","KABATEC","K0","PPL2"],["2FA-3407","MECALBI","K0","PPL1"],["2FA-3408","MECALBI","K0","PPL2"],["2FA-3409","MECALBI","K0","PPL2"],["3DB-3005","TAB_VISS","K0","PPL1"],["3DB-3006","TAB_VISS","K0","PPL1"],["3DB-3004","TAB_VISS","K0","PPL2"],["2AC-3027","ROTARY_LINE","K0","Hab2"],["3CB-3211","TE","K0","Hab2"],["CLC-184","CLIP_CHECKER","K0","Hab2"],["CLC-185","CLIP_CHECKER","K0","Hab2"],["1RG-3475","SCHUNK","K0","Hab2"],["1RG-3476","SCHUNK","K0","Hab2"],["1RG-3478","SCHUNK","K0","Hab3"],["1RG-3479","SCHUNK","K0","Hab2"],["3AA-3045","Traction","K0","Hab2"],["3CC-3011","T-PROTEC","K0","Hab2"],["3DC-3067","TV","K0","Hab2"],["3CB-3001","TE","K0","Hab3"],["CLC-010","CLIP_CHECKER","K0","Hab3"],["CLC-011","CLIP_CHECKER","K0","Hab3"],["1RG-3426","SCHUNK","K0","Hab3"],["1RG-3427","SCHUNK","K0","Hab3"],["1RG-3424","SCHUNK","K0","Hab3"],["3CC-3012","T-PROTEC","K0","Hab3"],["2AC-3107","ROTARY_LINE","K0","Hab3"],["2AC-3003","ROTARY_LINE","K0","PPL3"],["3DB-3013","TAB_VISS","K0","PPL3"],["3DB-3014","TAB_VISS","K0","PPL3"],["3CB-3013","TE","K0","PPL3"],["CLC-013","CLIP_CHECKER","K0","PPL3"],["2ED-3032","KABATEC","K0","Hab3"],["3CC-3013","T-PROTEC","K0","PPL3"],["2FA-3411","MECALBI","K0","PPL3"],["2FA-3412","MECALBI","K0","PPL3"],["2FA-3415","MECALBI","K0","PPL3"],["2ED-3035","KABATEC","K0","PPL3"],["2ED-3222","TAIPING","K0","PPL3"],["1RG-3434","SCHUNK","K0","PPL3"],["1RG-3435","SCHUNK","K0","PPL3"],["1RG-3446","SCHUNK","K0","PPL3"],["3HA-3014","TEST_ETANCHIETE","K0","PPL3"],["2ED-3037","TAIPING","K0","Hab1"],["CLC-219","CLIP_CHECKER","DPe","IP1"],["3CB-3010","TE","XJX","Mbloc1"],["2ED-3042","TAIPING","K0","Hab2"],["2ED-3043","TAIPING","K0","Hab2"],["3CB-3221","TE","DPe","PPL1"],["2ED-3055","TAIPING","K0","Hab3"],["2ED-3059","TAIPING","K0","Hab3"],["2ED-3060","TAIPING","K0","Hab3"],["2ED-3056","TAIPING","K0","Hab1"],["2ED-3057","TAIPING","K0","Hab1"],["2ED-3058","TAIPING","K0","Hab2"],["2ED-3061","TAIPING","K0","PPL1"],["2ED-3062","TAIPING","K0","PPL2"],["2AC-3190","ROTARY_LINE","XJX","Mbloc1"],["3DC-3030","TV","XJX","Mbloc1"],["3CC-3031","T-PROTEC","XJX","Mbloc1"],["2ED-3070","YAESU","XJX","Mbloc1"],["2ED-3071","YAESU","XJX","Mbloc1"],["1RG-3449","SCHUNK","XJX","Mbloc1"],["1RG-3450","SCHUNK","XJX","Mbloc1"],["2BE-3054","EXPANDER","XJX","Mbloc1"],["2BE-3055","EXPANDER","XJX","Mbloc1"],["2BE-3056","EXPANDER","XJX","Mbloc1"],["2BE-3057","EXPANDER","XJX","Mbloc1"],["2BE-3058","EXPANDER","XJX","Mbloc1"],["2BE-3059","EXPANDER","XJX","Mbloc1"],["3CB-3014","TE","XJX","Mbloc2"],["CLC-211","CLIP_CHECKER","XJX","Mbloc2"],["CLC-212","CLIP_CHECKER","XJX","Mbloc2"],["3CC-3032","T-PROTEC","XJX","Mbloc2"],["2AC-3036","ROTARY_LINE","XJX","Mbloc2"],["3DC-3031","TV","XJX","Mbloc2"],["1RG-3480","SCHUNK","XJX","Mbloc2"],["1RG-3483","SCHUNK","XJX","Mbloc2"],["1RG-3484","SCHUNK","XJX","Mbloc2"],["1RG-3486","SCHUNK","XJX","Mbloc2"],["2ED-3006","KABATEC","XJX","Mbloc2"],["2ED-3007","KABATEC","XJX","Mbloc2"],["2FA-3423","MECALBI","XJX","Mbloc2"],["2ED-3012","TAIPING","XJX","Mbloc2"],["2ED-3013","TAIPING","XJX","Mbloc2"],["2BE-3060","EXPANDER","XJX","Mbloc2"],["2BE-3061","EXPANDER","XJX","Mbloc2"],["2BE-3062","EXPANDER","XJX","Mbloc2"],["2BE-3063","EXPANDER","XJX","Mbloc2"],["2BE-3064","EXPANDER","XJX","Mbloc2"],["2BE-3065","EXPANDER","XJX","Mbloc2"],["2AC-3191","ROTARY_LINE","XJX","Mbloc5"],["3DC-3015","TV","XJX","Mbloc5"],["CLC-215","CLIP_CHECKER","XJX","Mbloc5"],["3CB-3231","TE","XJX","Mbloc5"],["3CC-3033","T-PROTEC","XJX","Mbloc5"],["2BE-3066","EXPANDER","XJX","Mbloc5"],["2BE-3067","EXPANDER","XJX","Mbloc5"],["2BE-3068","EXPANDER","XJX","Mbloc5"],["2BE-3069","EXPANDER","XJX","Mbloc5"],["2BE-3070","EXPANDER","XJX","Mbloc5"],["2BE-3071","EXPANDER","XJX","Mbloc5"],["2ED-3036","KABATEC","XJX","Mbloc5"],["2ED-3223","KABATEC","XJX","Mbloc5"],["1RG-3500","SCHUNK","XJX","Mbloc5"],["1RG-3501","SCHUNK","XJX","Mbloc5"],["1RG-3502","SCHUNK","XJX","Mbloc5"],["1RG-3503","SCHUNK","XJX","Mbloc5"],["2ED-3063","TAIPING","XJX","Mbloc5"],["2ED-3064","TAIPING","DPe","IP1"],["3CC-3017","T-PROTEC","K0","PPL2"],["2ED-3072","KABATEC","XJX","Mbloc1"],["2ED-3073","KABATEC","XJX","Mbloc1"],["3CC-3038","T-PROTEC","DPe","PPL1"],["2AC-3192","ROTARY_LINE","XJX","Mbloc4"],["1RG-3508","SCHUNK","K0","Hab1"],["3DC-3016","TV","XJX","Mbloc4"],["CLC-217","CLIP_CHECKER","XJX","Mbloc4"],["3CB-3234","TE","XJX","Mbloc4"],["3CC-3034","T-PROTEC","XJX","Mbloc4"],["CLC-218","CLIP_CHECKER","XJX","Mbloc4"],["2BE-3072","EXPANDER","XJX","Mbloc4"],["2BE-3073","EXPANDER","XJX","Mbloc4"],["2BE-3074","EXPANDER","XJX","Mbloc4"],["2BE-3075","EXPANDER","XJX","Mbloc4"],["2BE-3076","EXPANDER","XJX","Mbloc4"],["2BE-3077","EXPANDER","XJX","Mbloc4"],["2ED-3038","KABATEC","XJX","Mbloc4"],["2ED-3039","KABATEC","XJX","Mbloc4"],["2ED-3065","TAIPING","XJX","Mbloc4"],["2ED-3066","TAIPING","XJX","Mbloc4"],["1RG-3505","SCHUNK","XJX","Mbloc4"],["1RG-3506","SCHUNK","XJX","Mbloc4"],["1RG-3507","SCHUNK","XJX","Mbloc4"],["1RG-3509","SCHUNK","XJX","Mbloc4"],["3CB-3239","TE","DPe","IP1"],["CLC-225","CLIP_CHECKER","DPe","IP1"],["3CC-3036","T-PROTEC","DPe","IP1"],["3CC-3039","T-PROTEC","DPe","IP1"],["3CB-3236","TE","DPe","IP1"],["2AC-3200","ROTARY_LINE","DPe","IP1"],["1RG-3520","SCHUNK","DPe","IP1"],["1RG-3521","SCHUNK","DPe","IP1"],["2ED-3079","KABATEC","DPe","IP1"],["2ED-3081","KABATEC","DPe","IP1"],["3CB-3237","TE","DPe","Hab1"],["CLC-226","CLIP_CHECKER","DPe","Hab1"],["CLC-222","CLIP_CHECKER","DPe","Hab2"],["3CC-3051","T-PROTEC","DPe","Hab1"],["2AC-3201","ROTARY_LINE","DPe","Hab1"],["1RG-3522","SCHUNK","DPe","Hab1"],["1RG-3523","SCHUNK","DPe","Hab1"],["1RG-3514","SCHUNK","DPe","Hab1"],["1RG-3515","SCHUNK","DPe","Hab1"],["2KA-3250-(1-2)","PRESSE_BOUCHON","DPe","Hab1"],["2KA-3251(1-2-3...12)","PRESSE_BOUCHON","DPe","PPL1"],["2BE-3121","EXPANDER","DPe","Hab1"],["2BE-3122","EXPANDER","DPe","Hab1"],["2BE-3123","EXPANDER","DPe","Hab1"],["2BE-3125","EXPANDER","DPe","Hab1"],["2FA-3502","MECALBI","DPe","Hab1"],["2FA-3503","MECALBI","DPe","Hab1"],["2ED-3082","KABATEC","DPe","Hab1"],["CLC-224","CLIP_CHECKER","DPe","PPL2"],["CLC-262","CLIP_CHECKER","DPe","PPL2"],["2AC-3202","ROTARY_LINE","DPe","PPL1"],["2BE-3124","EXPANDER","DPe","PPL1"],["1RG-3516","SCHUNK","DPe","PPL1"],["1RG-3517","SCHUNK","DPe","PPL1"],["2ED-3089","KABATEC","XJX","Mbloc1"],["2FA-3505","MECALBI","DPe","PPL1"],["2FA-3504","MECALBI","DPe","PPL1"],["2ED-3083","KABATEC","DPe","PPL1"],["2BE-3085","EXPANDER","DPe","PPL1"],["3DC-3071","TV","DPe","PPL1"],["3DB-3040","TAB_VISS","DPe","PPL1"],["3DB-3041","TAB_VISS","DPe","PPL1"],["AC-3198","ROTARY_LINE","XJX","Mbloc3"],["3DC-3070","TV","XJX","Mbloc3"],["CLC-220","CLIP_CHECKER","XJX","Mbloc3"],["CLC-221","CLIP_CHECKER","XJX","Mbloc3"],["3CB-3235","TE","XJX","Mbloc3"],["3CC-3035","T-PROTEC","XJX","Mbloc3"],["2BE-3080","EXPANDER","XJX","Mbloc3"],["2BE-3081","EXPANDER","XJX","Mbloc3"],["2BE-3082","EXPANDER","XJX","Mbloc3"],["2BE-3083","EXPANDER","XJX","Mbloc3"],["1RG-3510","SCHUNK","XJX","Mbloc3"],["1RG-3511","SCHUNK","XJX","Mbloc3"],["1RG-3512","SCHUNK","XJX","Mbloc3"],["1RG-3513","SCHUNK","XJX","Mbloc3"],["2ED-3074","KABATEC","XJX","Mbloc3"],["2FA-3492","MECALBI","XJX","Mbloc1"],["2BE-3084","EXPANDER","XJX","Mbloc3"],["2ED-3076","TAIPING","XJX","Mbloc3"],["2ED-3077","TAIPING","XJX","Mbloc3"],["2ED-3078","TAIPING","XJX","Mbloc3"],["2ED-3091","TAIPING","DPe","PPL1"],["2ED-3090","TAIPING","DPe","IP1"],["2ED-3095","KABATEC","XJX","Mbloc5"],["2ED-3096","KABATEC","XJX","Mbloc3"],["1RG-3524","SCHUNK","DPe","IP1"],["2FA-3493","MECALBI","DPe","IP1"],["2FA-3507","MECALBI","DPe","IP1"],["2ED-3092","KABATEC","DPe","IP1"],["2AC-3210","ROTARY_LINE","DPe","PPL2"],["3CB-3250","TE","DPe","PPL2"],["CLC-250","CLIP_CHECKER","DPe","PPL1"],["3CC-3050","T-PROTEC","DPe","PPL2"],["3DC-3050","TV","DPe","PPL2"],["3DB-3050","TAB_VISS","DPe","PPL2"],["3DB-3051","TAB_VISS","DPe","PPL2"],["2FA-3501","MECALBI","DPe","PPL2"],["2FA-3511","MECALBI","DPe","PPL2"],["2FA-3512","MECALBI","DPe","PPL2"],["2ED-3100","KABATEC","DPe","PPL2"],["2ED-3101","KABATEC","DPe","PPL2"],["2ED-3102","KABATEC","DPe","PPL2"],["1RG-3518","SCHUNK","DPe","PPL1"],["1RG-3530","SCHUNK","DPe","PPL2"],["1RG-3531","SCHUNK","DPe","PPL2"],["1RG-3532","SCHUNK","DPe","PPL2"],["2BE-3100","EXPANDER","DPe","PPL2"],["2BE-3101","EXPANDER","DPe","PPL2"],["2AC-3211","ROTARY_LINE","DPe","Hab2"],["3CB-3251","TE","DPe","Hab2"],["1RG-3533","SCHUNK","DPe","Hab2"],["1RG-3534","SCHUNK","DPe","Hab2"],["1RG-3535","SCHUNK","DPe","Hab2"],["1RG-3536","SCHUNK","DPe","Hab2"],["2FA-3513","MECALBI","DPe","Hab2"],["2FA-3514","MECALBI","DPe","Hab1"],["2BE-3102","EXPANDER","DPe","Hab2"],["2BE-3103","EXPANDER","DPe","Hab2"],["2BE-3104","EXPANDER","DPe","Hab2"],["2BE-3105","EXPANDER","DPe","Hab2"],["3CC-3037","T-PROTEC","DPe","Hab2"],["3AA-3060","Traction","DPe","Hab2"],["2ED-3103","KABATEC","DPe","Hab2"],["2ED-3104","TAIPING","DPe","Hab2"],["2ED-3105","TAIPING","DPe","Hab2"],["3HA-3010","TEST_ETANCHIETE","DPe","Hab2"],["2FA-3209","MECALBI","DPe","Hab2"],["3CB-3252","TE","DPe","PPL3"],["3DB-3060","TAB_VISS","DPe","PPL3"],["CLC-251","CLIP_CHECKER","DPe","PPL3"],["3CC-3041","T-PROTEC","DPe","PPL3"],["3DB-3061","TAB_VISS","DPe","PPL3"],["2AC-3037","ROTARY_LINE","DPe","PPL3"],["1RG-3540","SCHUNK","DPe","PPL3"],["1RG-3541","SCHUNK","DPe","PPL3"],["1RG-3542","SCHUNK","DPe","PPL3"],["2ED-3121","KABATEC","DPe","PPL3"],["2ED-3122","KABATEC","DPe","PPL3"],["2ED-3123","KABATEC","DPe","PPL3"],["2FA-3021","MECALBI","DPe","PPL3"],["2FA-3022","MECALBI","DPe","PPL3"],["2FA-3023","MECALBI","DPe","PPL3"],["2BE-3106","EXPANDER","DPe","PPL3"],["2BE-3107","EXPANDER","DPe","PPL3"],["2ED-3504","TAIPING","K0","Hab2"],["1RG-3547","SCHUNK","K0","Hab2"],["2AC-3038","ROTARY_LINE","DPe","Hab3"],["3CB-3253","TE","DPe","Hab3"],["CLC-252","CLIP_CHECKER","DPe","Hab3"],["3CC-3042","T-PROTEC","DPe","Hab3"],["1RG-3543","SCHUNK","DPe","Hab3"],["1RG-3544","SCHUNK","DPe","Hab3"],["1RG-3545","SCHUNK","DPe","Hab3"],["1RG-3546","SCHUNK","DPe","Hab3"],["2BE-3110","EXPANDER","DPe","Hab3"],["2BE-3111","EXPANDER","DPe","Hab3"],["2BE-3112","EXPANDER","DPe","Hab3"],["2BE-3113","EXPANDER","DPe","Hab3"],["2FA-3024","MECALBI","DPe","Hab3"],["2FA-3025","MECALBI","DPe","Hab3"],["2ED-3124","TAIPING","DPe","Hab3"],["2ED-3125","TAIPING","DPe","Hab3"],["2ED-3126","TAIPING","DPe","Hab3"],["2ED-3217","KABATEC","DPe","Hab3"],["3HA-3026","TEST_ETANCHIETE","DPe","Hab3"],["2BE-3115","EXPANDER","K0","PPL3"],["2BE-3116","EXPANDER","K0","PPL2"],["2BE-3117","EXPANDER","K0","PPL1"],["3AA-3061","Traction","K0","Hab1"],["2ED-3127","KABATEC","DPe","PPL1"],["3AA-3062","Traction","K0","Hab3"],["1RG-3552","SCHUNK","DPe","PPL1"],["1RG-3551","SCHUNK","DPe","IP1"],["1RG-3550","SCHUNK","DPe","PPL2"],["2ED-3129","KABATEC","DPe","IP1"],["2FA-3515","MECALBI","DPe","PPL2"],["2FA-3516","MECALBI","DPe","PPL1"],["3AA-3063","Traction C-TEC","K0","IP2"],["1RG-3554","SCHUNK","K0","Hab3"],["2ED-3220","TAIPING","K0","Hab3"],["2BE-3118","EXPANDER","XJX","Mbloc4"],["1RG-3553","SCHUNK","K0","PPL1"],["2ED-3098","KABATEC","XJX","Mbloc3"],["3DC-3072","TV","DPe","PPL3"],["2FA-3496","MECALBI","K0","PPL1"],["2BE-3120","EXPANDER","XJX","Mbloc1"],["JC-3056","JIG_CHECKER","XJX","Smalls"],["1RG-3555","SCHUNK","DPe","PPL3"],["JC-3057","JIG_CHECKER","XJX","Smalls"],["JC-3058","JIG_CHECKER","XJX","Smalls"],["CLC-260","CLIP_CHECKER","XJX","Mbloc1"],["2JA-3004","JIGBOARD","K0","IP1"],["4OA-3398","PRINTER","K0","IP1"],["2JA-3183","JIGBOARD","K0","IP2"],["4OA-3408","PRINTER","K0","IP2"],["4OA-3409","PRINTER","K0","IP2"],["4OA-3410","PRINTER","K0","IP2"],["2JA-3182","JIGBOARD","K0","PPL1"],["4OA-3414","PRINTER","K0","PPL1"],["4OA-3415","PRINTER","K0","PPL1"],["4OA-3416","PRINTER","K0","PPL1"],["4OA-3417","PRINTER","K0","PPL1"],["2KA-3043(1,2,..)","PRESSE_BOUCHON","K0","PPL1"],["2JA-3017","JIGBOARD","K0","Hab1"],["2JA-3018","JIGBOARD","K0","PPL2"],["4OA-3027","PRINTER","K0","PPL2"],["4OA-3026","PRINTER","K0","PPL2"],["2JA-3027","JIGBOARD","K0","Hab2"],["2JA-3107","JIGBOARD","K0","Hab3"],["2JA-3003","JIGBOARD","K0","PPL3"],["4OA-3213","PRINTER","K0","PPL3"],["4OA-3225","PRINTER","XJX","Mbloc1"],["4OA-3226","PRINTER","XJX","Mbloc1"],["2JA-3190","JIGBOARD","XJX","Mbloc1"],["4OA-3004","PRINTER","XJX","Mbloc1"],["4OA-3007","PRINTER","XJX","Mbloc1"],["2KA-3120(1-2-3-4-5)","PRESSE_BOUCHON","XJX","Mbloc1"],["2JA-3036","JIGBOARD","XJX","Mbloc2"],["4OA-3033","PRINTER","XJX","Mbloc2"],["4OA-3034","PRINTER","XJX","Mbloc2"],["4OA-3035","PRINTER","XJX","Mbloc2"],["4OA-3036","PRINTER","XJX","Mbloc2"],["2KA-3125(1-2-3-4-5)","PRESSE_BOUCHON","XJX","Mbloc2"],["2JA-3191","JIGBOARD","XJX","Mbloc5"],["4OA-3431","PRINTER","XJX","Mbloc5"],["4OA-3432","PRINTER","XJX","Mbloc5"],["4OA-3433","PRINTER","XJX","Mbloc5"],["4OA-3434","PRINTER","XJX","Mbloc5"],["4OA-3435","PRINTER","XJX","Mbloc5"],["2KA-3130(1-2-3-4-5)","PRESSE_BOUCHON","XJX","Mbloc5"],["2JA-3194","JIGBOARD","XJX","Mbloc4"],["2JA-3195","JIGBOARD","K0","PPL3"],["2JA-3196","JIGBOARD","K0","PPL3"],["2JA-3197","JIGBOARD","K0","PPL3"],["4OA-3453","PRINTER","XJX","Mbloc4"],["4OA-3454","PRINTER","XJX","Mbloc4"],["4OA-3455","PRINTER","XJX","Mbloc4"],["4OA-3456","PRINTER","XJX","Mbloc4"],["4OA-3457","PRINTER","XJX","Mbloc4"],["2KA-3134(1-2-3-4-5)","PRESSE_BOUCHON","XJX","Mbloc4"],["2JA-3200","JIGBOARD","DPe","IP1"],["2JA-3202","JIGBOARD","DPe","PPL1"],["2JA-3198","JIGBOARD","XJX","Mbloc3"],["4OA-3460","PRINTER","XJX","Mbloc3"],["4OA-3461","PRINTER","XJX","Mbloc3"],["4OA-3462","PRINTER","XJX","Mbloc3"],["4OA-3463","PRINTER","XJX","Mbloc3"],["4OA-3464","PRINTER","XJX","Mbloc3"],["2KA-3137(1-2-3-4-5)","PRESSE_BOUCHON","XJX","Mbloc3"],["2JA-3201","JIGBOARD","DPe","Hab1"],["2JA-3210","JIGBOARD","DPe","PPL2"],["2JA-3211","JIGBOARD","DPe","Hab2"],["2KA-3061-(1-2)","PRESSE_BOUCHON","DPe","Hab2"],["2KA-3060(1-2-3...10)","PRESSE_BOUCHON","DPe","PPL2"],["2JA-3037","JIGBOARD","DPe","PPL3"],["2KA-3253(1-2-3...)","PRESSE_BOUCHON","DPe","PPL3"],["2JA-3038","JIGBOARD","DPe","Hab3"],["2KA-3254(1-2)","PRESSE_BOUCHON","DPe","Hab3"],["3DC-3010","TV","K0","Hab3"],["3DB-3010","TV","K0","PPL3"],["2FA-3462","MECALBI","K0","PPL1"]];
+
+// Build PREFIXES lookup from EQ array
+var PREFIXES = {};
+EQ.forEach(function(item) {
+  var code = item[0];
+  var prefix = code.split('-')[0];
+  if (!PREFIXES[prefix]) PREFIXES[prefix] = [];
+  PREFIXES[prefix].push({ code: code, projet: item[2], famille: item[3] });
+});
+
+
+
+
+
+
+
+
+
+function resetCode() {
+  // Reset équipement
+  document.getElementById('sel-prefix').value = '';
+  document.getElementById('sel-code').innerHTML = '<option value="">— Choisir le numéro —</option>';
+  var cc = document.getElementById('code-cards'); if(cc) cc.innerHTML = '';
+  document.getElementById('equip').value = '';
+  document.getElementById('nom-equip').value = '';
+  document.getElementById('projet').value = '';
+  document.getElementById('famille').value = '';
+  document.getElementById('eq-result').style.display = 'none';
+  document.getElementById('step2-bloc').style.display = 'none';
+  var selBloc = document.getElementById('selection-bloc');
+  if (selBloc) selBloc.style.display = 'block';
+
+  // Reset CP + Nature
+  var blocCP = document.getElementById('bloc-cp-nature');
+  if (blocCP) blocCP.style.display = 'none';
+  var cpChoix = document.getElementById('cp-choix');
+  if (cpChoix) cpChoix.value = '';
+  var cpNumBloc = document.getElementById('cp-num-bloc');
+  if (cpNumBloc) cpNumBloc.style.display = 'none';
+  var cpNum = document.getElementById('cp-num');
+  if (cpNum) cpNum.value = '';
+  var cp = document.getElementById('cp');
+  if (cp) cp.value = '';
+  var naturePb = document.getElementById('nature-pb');
+  if (naturePb) naturePb.value = '';
+  // Désélectionner tous les boutons nature
+  document.querySelectorAll('.btn-nature').forEach(function(b) {
+    b.classList.remove('selected');
+    b.style.background = '#0d1a2e';
+    b.style.color = '#f39c12';
+  });
+
+  // Reset problème / solution — forcé avec timeout
+  var pb = document.getElementById('pb');
+  if (pb) pb.value = '';
+  var sol = document.getElementById('sol');
+  if (sol) sol.value = '';
+  setTimeout(function() {
+    var pb2 = document.getElementById('pb');
+    if (pb2) pb2.value = '';
+  }, 50);
+
+  // Reset heures
+  var hdebut = document.getElementById('hdebut');
+  if (hdebut) hdebut.value = '';
+  var hfin = document.getElementById('hfin');
+  if (hfin) hfin.value = '';
+  var alerteH = document.getElementById('alerte-heures');
+  if (alerteH) alerteH.style.display = 'none';
+  var rtDisplay = document.getElementById('rt-display');
+  if (rtDisplay) rtDisplay.style.display = 'none';
+
+  // Reset WT / Effect / Statut
+  var wt = document.getElementById('wt');
+  if (wt) { wt.value = ''; wt.placeholder = '0'; }
+  var effect = document.getElementById('effect');
+  if (effect) { effect.value = ''; effect.placeholder = '0'; }
+  var statut = document.getElementById('statut');
+  if (statut) statut.value = 'Resolu';
+
+  // Reset type_equip
+  var typeEquip = document.getElementById('type_equip');
+  if (typeEquip) typeEquip.value = '';
+
+  majMsg();
+}
+
+
+
+function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+function calcDuree(hdebut, hfin) {
+  if (!hdebut || !hfin) return { dureeStr: '', dtStr: '' };
+  var h1 = parseInt(hdebut.split(':')[0]), m1 = parseInt(hdebut.split(':')[1]);
+  var h2 = parseInt(hfin.split(':')[0]),   m2 = parseInt(hfin.split(':')[1]);
+  var diff = (h2 * 60 + m2) - (h1 * 60 + m1);
+  if (diff < 0) diff += 1440;
+  var h = Math.floor(diff / 60), m = diff % 60;
+  var dtStr = h > 0 ? (h + 'h' + (m > 0 ? m + 'min' : '')) : (m + 'min');
+  return { dureeStr: ' (' + dtStr + ')', dtStr: dtStr, total: diff };
+}
+
+function formatHeure(input) {
+  var v = input.value.replace(/[^0-9]/g, '');
+  if (v.length >= 3) v = v.substring(0,2) + ':' + v.substring(2,4);
+  input.value = v;
+}
+
+function parseMinutes(str) {
+  if (!str || str.length < 5) return -1;
+  var parts = str.split(':');
+  if (parts.length !== 2) return -1;
+  var h = parseInt(parts[0]), m = parseInt(parts[1]);
+  if (isNaN(h) || isNaN(m) || h > 23 || m > 59) return -1;
+  return h * 60 + m;
+}
+
+function validerHeures() {
+  var hdebut = document.getElementById('hdebut').value;
+  var hfin   = document.getElementById('hfin').value;
+  var alerte = document.getElementById('alerte-heures');
+  if (hdebut && hfin) {
+    var h1 = parseMinutes(hdebut);
+    var h2 = parseMinutes(hfin);
+    if (h1 < 0 || h2 < 0) return;
+    if (h2 <= h1) {
+      alerte.style.display = 'block';
+      document.getElementById('hfin').value = '';
+    } else {
+      alerte.style.display = 'none';
+    }
+  }
+}
+
+
+function selectNature(btn, val) {
+  document.querySelectorAll('.btn-nature').forEach(function(b){ b.classList.remove('selected'); });
+  btn.classList.add('selected');
+  document.getElementById('nature-pb').value = val;
+
+  // Remplir automatiquement le champ commentaire
+  var pbField = document.getElementById('pb');
+  if (pbField) pbField.value = val;
+
+  // Boutons sans CP
+  var sansCp = ['PC planté','PC éteint','Rack brûlé','Autres'];
+  var cpInput = document.getElementById('cp-num');
+  var cpChoixSel = document.getElementById('cp-choix');
+  var cpHidden = document.getElementById('cp');
+
+  if (sansCp.indexOf(val) !== -1) {
+    // Masquer le champ numéro CP et mettre N/A automatiquement
+    cpInput.style.display = 'none';
+    cpInput.value = '';
+    if (cpChoixSel) cpChoixSel.value = 'N/A';
+    if (cpHidden) cpHidden.value = 'N/A';
+  } else {
+    // Afficher le champ CP
+    cpInput.style.display = 'block';
+    if (cpChoixSel && cpChoixSel.value === 'N/A') {
+      cpChoixSel.value = 'num';
+      if (cpHidden) cpHidden.value = '';
+    }
+  }
+
+  // Mise à jour label commentaire
+  var lbl = document.getElementById('label-pb');
+  if (lbl) {
+    if (sansCp.indexOf(val) !== -1) {
+      lbl.innerHTML = 'Problème constaté : Commentaire <span style="color:#94a3b8;font-size:11px;">(optionnel)</span>';
+    } else {
+      lbl.innerHTML = 'Problème constaté : Commentaire <span style="color:#e74c3c;font-size:12px;">*</span>';
+    }
+  }
+  majMsg();
+}
+
+function toggleCP() {
+  var choix = document.getElementById('cp-choix').value;
+  var bloc = document.getElementById('cp-num-bloc');
+  var cpHidden = document.getElementById('cp');
+  if (choix === 'N/A') {
+    bloc.style.display = 'none';
+    cpHidden.value = 'N/A';
+    var lbl = document.getElementById('label-pb');
+    if (lbl) lbl.innerHTML = 'Problème constaté : Commentaire *';
+  } else if (choix === 'num') {
+    bloc.style.display = 'block';
+    cpHidden.value = '';
+    var lbl = document.getElementById('label-pb');
+    if (lbl) lbl.innerHTML = 'Problème constaté : Commentaire <span style="color:#94a3b8;font-size:11px;">(optionnel)</span>';
+    document.getElementById('cp-num').focus();
+  } else {
+    bloc.style.display = 'none';
+    cpHidden.value = '';
+  }
+}
+
+function ajouterArret() {
+  var tech   = document.getElementById('tech').value;
+  var projet = document.getElementById('projet').value.trim();
+  var fam    = document.getElementById('famille').value.trim();
+  var equip  = document.getElementById('equip').value.trim();
+  var type_equip = document.getElementById('type_equip').value;
+  if (!type_equip) {
+    var rtype = document.getElementById('r-type-input');
+    if (rtype) type_equip = rtype.value;
+    document.getElementById('type_equip').value = type_equip;
+  }
+  // Sync CP value
+  var cpChoix = document.getElementById('cp-choix').value;
+  if (cpChoix === 'num') {
+    var cpNum = document.getElementById('cp-num').value.trim().toUpperCase();
+    document.getElementById('cp').value = cpNum;
+  }
+  var cp     = document.getElementById('cp').value.trim();
+  var pb     = document.getElementById('pb').value.trim();
+  var sol    = document.getElementById('sol').value.trim();
+  var hdebut = document.getElementById('hdebut').value;
+  var hfin   = document.getElementById('hfin').value;
+  var effect = document.getElementById('effect').value;
+  var wtInput = document.getElementById('wt').value;
+  var wt = parseInt(wtInput) || 0;
+  var alerte = document.getElementById('alerte-form');
+
+  var manquants = [];
+  if (!tech)       manquants.push('Technicien');
+  if (!projet)     manquants.push('Projet');
+  if (!fam)        manquants.push('Famille');
+  if (!equip)      manquants.push('N° Équipement');
+
+  // Validation CP+Nature uniquement pour 3CB (TE), CLC et JC
+  var prefixeActuel = document.getElementById('sel-prefix') ? document.getElementById('sel-prefix').value : '';
+  var prefixesAvecCP = ['3CB', 'CLC', 'JC'];
+  var needsCP = prefixesAvecCP.indexOf(prefixeActuel) !== -1;
+
+  if (needsCP) {
+    var naturePbCheck = document.getElementById('nature-pb') ? document.getElementById('nature-pb').value : '';
+    var sansCpCheck = ['PC planté','PC éteint','Rack brûlé','Autres'];
+    if (sansCpCheck.indexOf(naturePbCheck) === -1) {
+      if (!cpChoix) manquants.push('N° CP (choisir N/A ou saisir numéro)');
+      else if (cpChoix === 'num' && !cp) manquants.push('N° CP (saisir le numéro ex: CP 134AF)');
+    }
+    var naturePb = document.getElementById('nature-pb') ? document.getElementById('nature-pb').value : '';
+    var sansCp = ['PC planté','PC éteint','Rack brûlé','Autres'];
+    var cpNumInput = document.getElementById('cp-num');
+    if (cpChoix === 'num' && sansCp.indexOf(naturePb) === -1 && cpNumInput && cpNumInput.style.display !== 'none' && !cpNumInput.value.trim()) {
+      manquants.push('N° CP (saisir le numéro ex: CP 134AF)');
+    }
+    if (sansCp.indexOf(naturePb) === -1 && naturePb && !pb) manquants.push('Problème constaté : Commentaire');
+  }
+  if (!sol)        manquants.push('Solution');
+  if (!hdebut || parseMinutes(hdebut) < 0) manquants.push('Heure Début (format HH:MM)');
+  if (!hfin   || parseMinutes(hfin)   < 0) manquants.push('Heure Fin (format HH:MM)');
+  else if (hdebut && parseMinutes(hdebut) >= 0 && parseMinutes(hfin) <= parseMinutes(hdebut)) manquants.push('Heure Fin doit être après Heure Début');
+  if (!effect)     manquants.push('Effectifs');
+  if (wtInput === '') manquants.push('Waiting Time');
+
+  if (manquants.length > 0) {
+    alerte.innerHTML = '⚠️ Champs manquants : ' + manquants.join(', ');
+    alerte.style.display = 'block';
+    alerte.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(function(){ alerte.style.display = 'none'; }, 5000);
+    return;
+  }
+  alerte.style.display = 'none';
+
+  arrets.push({
+    projet: projet, famille: fam,
+    equip: equip,
+    nom_equip: document.getElementById('nom-equip').value.trim(),
+    type_equip: type_equip,
+    cp: cp.toUpperCase(),
+    pb: pb, sol: sol,
+    hdebut: hdebut, hfin: hfin,
+    wt: wt,
+    effect: effect,
+    statut: document.getElementById('statut').value,
+    date: document.getElementById('date').value,
+    tech: document.getElementById('tech').value
+  });
+
+  // Reset formulaire complet (garder tech et date)
+  selectedEquip = null;
+  resetCode();
+  // Réinitialiser tous les champs cachés équipement
+  document.getElementById('equip').value = '';
+  document.getElementById('nom-equip').value = '';
+  document.getElementById('projet').value = '';
+  document.getElementById('famille').value = '';
+  document.getElementById('type_equip').value = '';
+  var rproj = document.getElementById('r-proj-input'); if (rproj) rproj.value = '';
+  var rfam  = document.getElementById('r-fam-input');  if (rfam)  rfam.value  = '';
+  var rtype = document.getElementById('r-type-input'); if (rtype) rtype.value = '';
+  // Réinitialiser champs texte
+  ['pb','sol','hdebut','hfin','effect','wt'].forEach(function(id){ document.getElementById(id).value = ''; });
+  // Réinitialiser CP
+  document.getElementById('cp').value = '';
+  document.getElementById('cp-choix').value = '';
+  document.getElementById('cp-num').value = '';
+  document.getElementById('cp-num-bloc').style.display = 'none';
+  // Réinitialiser statut et RT display
+  document.getElementById('statut').value = 'Resolu';
+  var rtDiv = document.getElementById('rt-display'); if (rtDiv) rtDiv.style.display = 'none';
+  // Réinitialiser alerte heures
+  var alerteH = document.getElementById('alerte-heures'); if (alerteH) alerteH.style.display = 'none';
+
+  afficherListe();
+  majMsg();
+  document.getElementById('liste-arrets').scrollIntoView({ behavior: 'smooth' });
+}
+
+function supprimerArret(idx) {
+  arrets.splice(idx, 1);
+  afficherListe();
+  majMsg();
+}
+
+function afficherListe() {
+  var container = document.getElementById('liste-arrets');
+  var compteur  = document.getElementById('compteur');
+  if (arrets.length === 0) {
+    container.innerHTML = '';
+    compteur.style.display = 'none';
+    return;
+  }
+  compteur.style.display = 'block';
+  compteur.innerHTML = '✅ ' + arrets.length + ' arrêt(s) enregistré(s) — Prêt à envoyer';
+
+  var html = '<div class="bloc"><div class="bloc-titre">📋 Arrêts enregistrés</div>';
+  for (var i = 0; i < arrets.length; i++) {
+    var a = arrets[i];
+    var d = calcDuree(a.hdebut, a.hfin);
+    html += '<div class="arret-item">';
+    var aDateStr = '';
+    if (a.date) { var ap = a.date.split('-'); aDateStr = ap[2]+'/'+ap[1]+'/'+ap[0]; }
+    var aHeader = 'Arrêt #' + (i+1) + ' — ' + a.projet + ' / ' + a.famille;
+    if (a.tech) aHeader += ' | 👤 ' + a.tech;
+    if (aDateStr) aHeader += ' | 📅 ' + aDateStr;
+    html += '<div class="arret-header">' + aHeader + '</div>';
+    html += '<button class="btn-suppr" onclick="supprimerArret(' + i + ')">✕ Suppr</button>';
+    html += '<div class="arret-detail">';
+    if (a.nom_equip) html += 'Équip: ' + a.nom_equip + ' [' + a.equip + ']<br>';
+    else if (a.equip) html += 'Equip: ' + a.equip + '<br>';
+    if (a.type_equip) html += 'Type: ' + a.type_equip + '<br>';
+    if (a.cp)         html += 'N° CP: ' + a.cp + '<br>';
+    html += 'PB: ' + a.pb + '<br>';
+    html += 'SOL: ' + a.sol + '<br>';
+    if (a.hdebut && a.hfin) html += '⏱ ' + a.hdebut + ' → ' + a.hfin + d.dureeStr + '<br>';
+    if (typeof a.wt !== 'undefined') {
+      var rt = d.total - a.wt;
+      if (rt < 0) rt = 0;
+      var rtStr = rt >= 60 ? Math.floor(rt/60)+'h'+(rt%60 > 0 ? (rt%60)+'min' : '') : rt+'min';
+      var wtStr = a.wt >= 60 ? Math.floor(a.wt/60)+'h'+(a.wt%60 > 0 ? (a.wt%60)+'min' : '') : a.wt+'min';
+      html += '⏳ WT: ' + wtStr + ' | 🔧 RT: ' + rtStr + '<br>';
+    }
+    if (a.effect) html += 'EFF: ' + a.effect + ' pcs<br>';
+    html += 'Statut: ' + a.statut;
+    html += '</div></div>';
+  }
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function buildMsg() {
+  if (arrets.length === 0) return 'Ajoute au moins un arrêt pour générer le message...';
+  var sep = '------------------------\n';
+  var fmtMin = function(v) { return v >= 60 ? Math.floor(v/60)+'h'+(v%60>0?(v%60)+'min':'') : v+'min'; };
+
+  var msg = '';
+
+  for (var i = 0; i < arrets.length; i++) {
+    var a = arrets[i];
+    var d = calcDuree(a.hdebut, a.hfin);
+
+    // En-tête propre à cet arrêt (tech + date sauvegardés lors de l'ajout)
+    var dateStr = '';
+    if (a.date) { var p = a.date.split('-'); dateStr = p[2]+'/'+p[1]+'/'+p[0]; }
+
+    msg += 'RAPPORT MAINTENANCE\n';
+    msg += sep;
+    if (a.tech)   msg += 'Tech: ' + a.tech + '\n';
+    if (dateStr)  msg += 'Date: ' + dateStr + '\n';
+    msg += sep;
+
+    msg += '--- ARRET #' + (i+1) + ' ---\n';
+    msg += sep;
+
+    if (a.projet)      msg += 'Projet: '   + a.projet + '\n';
+    if (a.famille)     msg += 'Famille: '  + a.famille + '\n';
+    if (a.equip)       msg += 'Code Inv: ' + a.equip + '\n';
+    if (a.nom_equip)   msg += 'Equip: '    + a.nom_equip + '\n';
+    if (a.type_equip)  msg += 'Type: '     + a.type_equip + '\n';
+    if (a.cp)          msg += 'N° CP: '    + a.cp + '\n';
+    msg += sep;
+    msg += 'PB: '  + a.pb  + '\n';
+    msg += 'SOL: ' + a.sol + '\n';
+    msg += sep;
+    if (a.hdebut && a.hfin) {
+      msg += 'Reparation: ' + a.hdebut + ' -> ' + a.hfin + d.dureeStr + '\n';
+      if (d.dtStr) msg += 'DT Total: ' + d.dtStr + '\n';
+      var wt = parseInt(a.wt) || 0;
+      var rt = d.total - wt; if (rt < 0) rt = 0;
+      msg += 'WT: ' + fmtMin(wt) + '\n';
+      msg += 'RT: ' + fmtMin(rt) + '\n';
+    }
+    if (a.effect) msg += 'EFF: ' + a.effect + ' pcs\n';
+    msg += 'Statut: ' + a.statut + '\n';
+
+    if (i < arrets.length - 1) msg += '\n';
+  }
+
+  msg += sep + 'Total arrêts: ' + arrets.length;
+  return msg;
+}
+
+function envoyerWhatsApp() {
+  if (arrets.length === 0) {
+    alert('⚠️ Aucun arrêt enregistré !\nAjoute au moins un arrêt avant d\'envoyer.');
+    return;
+  }
+  var msg = buildMsg();
+  var url = 'https://wa.me/' + PHONE + '?text=' + encodeURIComponent(msg);
+  window.open(url, '_blank');
+}
+
+function verifierEnvoi() {
+  if (arrets.length === 0) {
+    alert('⚠️ Aucun arrêt enregistré !\nAjoute au moins un arrêt avant d\'envoyer.');
+    return false;
+  }
+  return true;
+}
+
+function majMsg() {
+  var msg = buildMsg();
+  document.getElementById('zone-msg').value = msg;
+  document.getElementById('msg-copie').style.display = 'none';
+  updateRTPreview();
+}
+
+function updateRTPreview() {
+  var hdebut = document.getElementById('hdebut').value;
+  var hfin   = document.getElementById('hfin').value;
+  var wt     = parseInt(document.getElementById('wt').value) || 0;
+  var rtDiv  = document.getElementById('rt-display');
+  var rtVal  = document.getElementById('rt-value');
+  if (hdebut && hfin && parseMinutes(hdebut) >= 0 && parseMinutes(hfin) > parseMinutes(hdebut)) {
+    var dt = parseMinutes(hfin) - parseMinutes(hdebut);
+    var rt = dt - wt; if (rt < 0) rt = 0;
+    var fmt = function(v) { return v >= 60 ? Math.floor(v/60)+'h'+(v%60>0?(v%60)+'min':'') : v+'min'; };
+    rtVal.textContent = fmt(rt) + '  (DT: ' + fmt(dt) + ' − WT: ' + fmt(wt) + ')';
+    rtDiv.style.display = 'block';
+  } else {
+    rtDiv.style.display = 'none';
+  }
+}
+
+function copier() {
+  var ta = document.getElementById('zone-msg');
+  ta.focus(); ta.select(); ta.setSelectionRange(0, 99999);
+  var ok = false;
+  try { ok = document.execCommand('copy'); } catch(e) {}
+  if (ok) { confirmerCopie(); return; }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(ta.value).then(confirmerCopie).catch(function(){
+      alert('Appuie longuement sur le texte vert\npuis Tout selectionner puis Copier');
+    });
+    return;
+  }
+  alert('Appuie longuement sur le texte vert\npuis Tout selectionner puis Copier');
+}
+
+function confirmerCopie() {
+  var btn = document.getElementById('btn-copier');
+  btn.textContent = 'COPIE OK !';
+  btn.style.background = '#25d366'; btn.style.color = 'white'; btn.style.borderColor = '#25d366';
+  document.getElementById('msg-copie').style.display = 'block';
+  setTimeout(function(){
+    btn.textContent = '📋 COPIER LE MESSAGE';
+    btn.style.background = '#0a0a0a'; btn.style.color = '#00d4ff'; btn.style.borderColor = '#00d4ff';
+  }, 4000);
+}
+
+window.onload = function() {
+  try {
+    var t = new Date();
+    var yyyy = t.getFullYear();
+    var mm = pad(t.getMonth() + 1);
+    var dd = pad(t.getDate());
+    document.getElementById('date').value = yyyy + '-' + mm + '-' + dd;
+  } catch(e) {}
+  window._filteredEquips = [];
+  majMsg();
+};
+
+var DB={"2FA-3477":["MECALBI","K0","IP1"],"2FA-3400":["MECALBI","K0","IP1"],"2FA-3401":["MECALBI","K0","PPL2"],"2FA-3419":["MECALBI","K0","PPL2"],"1RG-3504":["SCHUNK","K0","PPL3"],"1RG-3402":["SCHUNK","K0","PPL1"],"1RG-3437":["SCHUNK","K0","PPL2"],"3AA-3021":["Traction C-TEC","XJX","Mbloc1"],"3AA-3029":["Traction","K0","IP1"],"3AA-3030":["Traction C-TEC","DPe","PPL3"],"3AA-3031":["Traction","K0","PPL1"],"1RG-3525":["SCHUNK","K0","IP1"],"2AC-3004":["ROTARY_LINE","K0","IP1"],"1RG-3468":["SCHUNK","K0","IP1"],"2FA-3510":["MECALBI","K0","IP1"],"3AA-3042":["Traction C-TEC","XJX","Mbloc5"],"1RG-3487":["SCHUNK","K0","IP1"],"1RG-3488":["SCHUNK","K0","IP1"],"2ED-3010":["KABATEC","K0","IP1"],"3CB-3197":["TE","K0","IP1"],"CLC-170":["CLIP_CHECKER","K0","IP1"],"CLC-171":["CLIP_CHECKER","K0","IP1"],"2ED-3011":["KABATEC","K0","IP1"],"2ED-3275":["KABATEC","K0","IP1"],"2ED-3016":["KABATEC","K0","IP1"],"2AC-3164":["ROTARY_LINE","K0","IP2"],"3CB-3204":["TE","K0","IP2"],"CLC-174":["CLIP_CHECKER","K0","IP2"],"CLC-175":["CLIP_CHECKER","K0","IP2"],"1RG-3491":["SCHUNK","K0","IP2"],"1RG-3492":["SCHUNK","K0","PPL1"],"2ED-3018":["KABATEC","K0","IP2"],"2ED-3111":["KABATEC","K0","IP2"],"2FA-3481":["MECALBI","K0","IP2"],"1RG-3494":["SCHUNK","XJX","Mbloc1"],"1RG-3496":["SCHUNK","XJX","Mbloc1"],"2AC-3166":["ROTARY_LINE","K0","PPL1"],"3CB-3206":["TE","K0","PPL1"],"CLC-177":["CLIP_CHECKER","K0","PPL1"],"3DC-3063":["TV","K0","PPL1"],"3DC-3064":["TV","K0","PPL1"],"1RG-3497":["SCHUNK","K0","PPL1"],"1RG-3498":["SCHUNK","K0","PPL1"],"2FA-3483":["MECALBI","K0","PPL1"],"2FA-3484":["MECALBI","K0","PPL1"],"2FA-3485":["MECALBI","K0","PPL2"],"2ED-3021":["KABATEC","K0","PPL1"],"3HA-3022":["TEST_ETANCHIETE","K0","PPL1"],"3CC-3005":["T-PROTEC","K0","PPL1"],"3HA-3023":["TEST_ETANCHIETE","K0","PPL1"],"2FA-3489":["MECALBI","XJX","Mbloc1"],"1RG-3408":["SCHUNK","K0","Hab1"],"1RG-3409":["SCHUNK","K0","Hab1"],"1RG-3410":["SCHUNK","K0","Hab1"],"CLC-178":["CLIP_CHECKER","K0","Hab1"],"CLC-179":["CLIP_CHECKER","K0","Hab1"],"1RG-3439":["SCHUNK","K0","IP2"],"2AC-3017":["ROTARY_LINE","K0","Hab1"],"3CB-3207":["TE","K0","Hab1"],"3DC-3065":["TV","K0","Hab1"],"3CC-3009":["T-PROTEC","K0","Hab1"],"3CB-3210":["TE","K0","PPL2"],"CLC-181":["CLIP_CHECKER","K0","PPL2"],"3CC-3010":["T-PROTEC","K0","PPL2"],"3HA-3024":["TEST_ETANCHIETE","K0","PPL2"],"2AC-3018":["ROTARY_LINE","K0","PPL2"],"3DC-3066":["TV","K0","PPL2"],"3DB-3003":["TAB_VISS","K0","PPL2"],"1RG-3412":["SCHUNK","K0","PPL2"],"1RG-3419":["SCHUNK","K0","PPL2"],"1RG-3413":["SCHUNK","K0","PPL2"],"2ED-3028":["KABATEC","K0","PPL2"],"2FA-3407":["MECALBI","K0","PPL1"],"2FA-3408":["MECALBI","K0","PPL2"],"2FA-3409":["MECALBI","K0","PPL2"],"3DB-3005":["TAB_VISS","K0","PPL1"],"3DB-3006":["TAB_VISS","K0","PPL1"],"3DB-3004":["TAB_VISS","K0","PPL2"],"2AC-3027":["ROTARY_LINE","K0","Hab2"],"3CB-3211":["TE","K0","Hab2"],"CLC-184":["CLIP_CHECKER","K0","Hab2"],"CLC-185":["CLIP_CHECKER","K0","Hab2"],"1RG-3475":["SCHUNK","K0","Hab2"],"1RG-3476":["SCHUNK","K0","Hab2"],"1RG-3478":["SCHUNK","K0","Hab3"],"1RG-3479":["SCHUNK","K0","Hab2"],"3AA-3045":["Traction","K0","Hab2"],"3CC-3011":["T-PROTEC","K0","Hab2"],"3DC-3067":["TV","K0","Hab2"],"3CB-3001":["TE","K0","Hab3"],"CLC-010":["CLIP_CHECKER","K0","Hab3"],"CLC-011":["CLIP_CHECKER","K0","Hab3"],"1RG-3426":["SCHUNK","K0","Hab3"],"1RG-3427":["SCHUNK","K0","Hab3"],"1RG-3424":["SCHUNK","K0","Hab3"],"3CC-3012":["T-PROTEC","K0","Hab3"],"2AC-3107":["ROTARY_LINE","K0","Hab3"],"2AC-3003":["ROTARY_LINE","K0","PPL3"],"3DB-3013":["TAB_VISS","K0","PPL3"],"3DB-3014":["TAB_VISS","K0","PPL3"],"3CB-3013":["TE","K0","PPL3"],"CLC-013":["CLIP_CHECKER","K0","PPL3"],"2ED-3032":["KABATEC","K0","Hab3"],"3CC-3013":["T-PROTEC","K0","PPL3"],"2FA-3411":["MECALBI","K0","PPL3"],"2FA-3412":["MECALBI","K0","PPL3"],"2FA-3415":["MECALBI","K0","PPL3"],"2ED-3035":["KABATEC","K0","PPL3"],"2ED-3222":["TAIPING","K0","PPL3"],"1RG-3434":["SCHUNK","K0","PPL3"],"1RG-3435":["SCHUNK","K0","PPL3"],"1RG-3446":["SCHUNK","K0","PPL3"],"3HA-3014":["TEST_ETANCHIETE","K0","PPL3"],"2ED-3037":["TAIPING","K0","Hab1"],"CLC-219":["CLIP_CHECKER","DPe","IP1"],"3CB-3010":["TE","XJX","Mbloc1"],"2ED-3042":["TAIPING","K0","Hab2"],"2ED-3043":["TAIPING","K0","Hab2"],"3CB-3221":["TE","DPe","PPL1"],"2ED-3055":["TAIPING","K0","Hab3"],"2ED-3059":["TAIPING","K0","Hab3"],"2ED-3060":["TAIPING","K0","Hab3"],"2ED-3056":["TAIPING","K0","Hab1"],"2ED-3057":["TAIPING","K0","Hab1"],"2ED-3058":["TAIPING","K0","Hab2"],"2ED-3061":["TAIPING","K0","PPL1"],"2ED-3062":["TAIPING","K0","PPL2"],"2AC-3190":["ROTARY_LINE","XJX","Mbloc1"],"3DC-3030":["TV","XJX","Mbloc1"],"3CC-3031":["T-PROTEC","XJX","Mbloc1"],"2ED-3070":["YAESU","XJX","Mbloc1"],"2ED-3071":["YAESU","XJX","Mbloc1"],"1RG-3449":["SCHUNK","XJX","Mbloc1"],"1RG-3450":["SCHUNK","XJX","Mbloc1"],"2BE-3054":["EXPANDER","XJX","Mbloc1"],"2BE-3055":["EXPANDER","XJX","Mbloc1"],"2BE-3056":["EXPANDER","XJX","Mbloc1"],"2BE-3057":["EXPANDER","XJX","Mbloc1"],"2BE-3058":["EXPANDER","XJX","Mbloc1"],"2BE-3059":["EXPANDER","XJX","Mbloc1"],"3CB-3014":["TE","XJX","Mbloc2"],"CLC-211":["CLIP_CHECKER","XJX","Mbloc2"],"CLC-212":["CLIP_CHECKER","XJX","Mbloc2"],"3CC-3032":["T-PROTEC","XJX","Mbloc2"],"2AC-3036":["ROTARY_LINE","XJX","Mbloc2"],"3DC-3031":["TV","XJX","Mbloc2"],"1RG-3480":["SCHUNK","XJX","Mbloc2"],"1RG-3483":["SCHUNK","XJX","Mbloc2"],"1RG-3484":["SCHUNK","XJX","Mbloc2"],"1RG-3486":["SCHUNK","XJX","Mbloc2"],"2ED-3006":["KABATEC","XJX","Mbloc2"],"2ED-3007":["KABATEC","XJX","Mbloc2"],"2FA-3423":["MECALBI","XJX","Mbloc2"],"2ED-3012":["TAIPING","XJX","Mbloc2"],"2ED-3013":["TAIPING","XJX","Mbloc2"],"2BE-3060":["EXPANDER","XJX","Mbloc2"],"2BE-3061":["EXPANDER","XJX","Mbloc2"],"2BE-3062":["EXPANDER","XJX","Mbloc2"],"2BE-3063":["EXPANDER","XJX","Mbloc2"],"2BE-3064":["EXPANDER","XJX","Mbloc2"],"2BE-3065":["EXPANDER","XJX","Mbloc2"],"2AC-3191":["ROTARY_LINE","XJX","Mbloc5"],"3DC-3015":["TV","XJX","Mbloc5"],"CLC-215":["CLIP_CHECKER","XJX","Mbloc5"],"3CB-3231":["TE","XJX","Mbloc5"],"3CC-3033":["T-PROTEC","XJX","Mbloc5"],"2BE-3066":["EXPANDER","XJX","Mbloc5"],"2BE-3067":["EXPANDER","XJX","Mbloc5"],"2BE-3068":["EXPANDER","XJX","Mbloc5"],"2BE-3069":["EXPANDER","XJX","Mbloc5"],"2BE-3070":["EXPANDER","XJX","Mbloc5"],"2BE-3071":["EXPANDER","XJX","Mbloc5"],"2ED-3036":["KABATEC","XJX","Mbloc5"],"2ED-3223":["KABATEC","XJX","Mbloc5"],"1RG-3500":["SCHUNK","XJX","Mbloc5"],"1RG-3501":["SCHUNK","XJX","Mbloc5"],"1RG-3502":["SCHUNK","XJX","Mbloc5"],"1RG-3503":["SCHUNK","XJX","Mbloc5"],"2ED-3063":["TAIPING","XJX","Mbloc5"],"2ED-3064":["TAIPING","DPe","IP1"],"3CC-3017":["T-PROTEC","K0","PPL2"],"2ED-3072":["KABATEC","XJX","Mbloc1"],"2ED-3073":["KABATEC","XJX","Mbloc1"],"3CC-3038":["T-PROTEC","DPe","PPL1"],"2AC-3192":["ROTARY_LINE","XJX","Mbloc4"],"1RG-3508":["SCHUNK","K0","Hab1"],"3DC-3016":["TV","XJX","Mbloc4"],"CLC-217":["CLIP_CHECKER","XJX","Mbloc4"],"3CB-3234":["TE","XJX","Mbloc4"],"3CC-3034":["T-PROTEC","XJX","Mbloc4"],"CLC-218":["CLIP_CHECKER","XJX","Mbloc4"],"2BE-3072":["EXPANDER","XJX","Mbloc4"],"2BE-3073":["EXPANDER","XJX","Mbloc4"],"2BE-3074":["EXPANDER","XJX","Mbloc4"],"2BE-3075":["EXPANDER","XJX","Mbloc4"],"2BE-3076":["EXPANDER","XJX","Mbloc4"],"2BE-3077":["EXPANDER","XJX","Mbloc4"],"2ED-3038":["KABATEC","XJX","Mbloc4"],"2ED-3039":["KABATEC","XJX","Mbloc4"],"2ED-3065":["TAIPING","XJX","Mbloc4"],"2ED-3066":["TAIPING","XJX","Mbloc4"],"1RG-3505":["SCHUNK","XJX","Mbloc4"],"1RG-3506":["SCHUNK","XJX","Mbloc4"],"1RG-3507":["SCHUNK","XJX","Mbloc4"],"1RG-3509":["SCHUNK","XJX","Mbloc4"],"3CB-3239":["TE","DPe","IP1"],"CLC-225":["CLIP_CHECKER","DPe","IP1"],"3CC-3036":["T-PROTEC","DPe","IP1"],"3CC-3039":["T-PROTEC","DPe","IP1"],"3CB-3236":["TE","DPe","IP1"],"2AC-3200":["ROTARY_LINE","DPe","IP1"],"1RG-3520":["SCHUNK","DPe","IP1"],"1RG-3521":["SCHUNK","DPe","IP1"],"2ED-3079":["KABATEC","DPe","IP1"],"2ED-3081":["KABATEC","DPe","IP1"],"3CB-3237":["TE","DPe","Hab1"],"CLC-226":["CLIP_CHECKER","DPe","Hab1"],"CLC-222":["CLIP_CHECKER","DPe","Hab2"],"3CC-3051":["T-PROTEC","DPe","Hab1"],"2AC-3201":["ROTARY_LINE","DPe","Hab1"],"1RG-3522":["SCHUNK","DPe","Hab1"],"1RG-3523":["SCHUNK","DPe","Hab1"],"1RG-3514":["SCHUNK","DPe","Hab1"],"1RG-3515":["SCHUNK","DPe","Hab1"],"2KA-3250-(1-2)":["PRESSE_BOUCHON","DPe","Hab1"],"2KA-3251(1-2-3...12)":["PRESSE_BOUCHON","DPe","PPL1"],"2BE-3121":["EXPANDER","DPe","Hab1"],"2BE-3122":["EXPANDER","DPe","Hab1"],"2BE-3123":["EXPANDER","DPe","Hab1"],"2BE-3125":["EXPANDER","DPe","Hab1"],"2FA-3502":["MECALBI","DPe","Hab1"],"2FA-3503":["MECALBI","DPe","Hab1"],"2ED-3082":["KABATEC","DPe","Hab1"],"CLC-224":["CLIP_CHECKER","DPe","PPL2"],"CLC-262":["CLIP_CHECKER","DPe","PPL2"],"2AC-3202":["ROTARY_LINE","DPe","PPL1"],"2BE-3124":["EXPANDER","DPe","PPL1"],"1RG-3516":["SCHUNK","DPe","PPL1"],"1RG-3517":["SCHUNK","DPe","PPL1"],"2ED-3089":["KABATEC","XJX","Mbloc1"],"2FA-3505":["MECALBI","DPe","PPL1"],"2FA-3504":["MECALBI","DPe","PPL1"],"2ED-3083":["KABATEC","DPe","PPL1"],"2BE-3085":["EXPANDER","DPe","PPL1"],"3DC-3071":["TV","DPe","PPL1"],"3DB-3040":["TAB_VISS","DPe","PPL1"],"3DB-3041":["TAB_VISS","DPe","PPL1"],"AC-3198":["ROTARY_LINE","XJX","Mbloc3"],"3DC-3070":["TV","XJX","Mbloc3"],"CLC-220":["CLIP_CHECKER","XJX","Mbloc3"],"CLC-221":["CLIP_CHECKER","XJX","Mbloc3"],"3CB-3235":["TE","XJX","Mbloc3"],"3CC-3035":["T-PROTEC","XJX","Mbloc3"],"2BE-3080":["EXPANDER","XJX","Mbloc3"],"2BE-3081":["EXPANDER","XJX","Mbloc3"],"2BE-3082":["EXPANDER","XJX","Mbloc3"],"2BE-3083":["EXPANDER","XJX","Mbloc3"],"1RG-3510":["SCHUNK","XJX","Mbloc3"],"1RG-3511":["SCHUNK","XJX","Mbloc3"],"1RG-3512":["SCHUNK","XJX","Mbloc3"],"1RG-3513":["SCHUNK","XJX","Mbloc3"],"2ED-3074":["KABATEC","XJX","Mbloc3"],"2FA-3492":["MECALBI","XJX","Mbloc1"],"2BE-3084":["EXPANDER","XJX","Mbloc3"],"2ED-3076":["TAIPING","XJX","Mbloc3"],"2ED-3077":["TAIPING","XJX","Mbloc3"],"2ED-3078":["TAIPING","XJX","Mbloc3"],"2ED-3091":["TAIPING","DPe","PPL1"],"2ED-3090":["TAIPING","DPe","IP1"],"2ED-3095":["KABATEC","XJX","Mbloc5"],"2ED-3096":["KABATEC","XJX","Mbloc3"],"1RG-3524":["SCHUNK","DPe","IP1"],"2FA-3493":["MECALBI","DPe","IP1"],"2FA-3507":["MECALBI","DPe","IP1"],"2ED-3092":["KABATEC","DPe","IP1"],"2AC-3210":["ROTARY_LINE","DPe","PPL2"],"3CB-3250":["TE","DPe","PPL2"],"CLC-250":["CLIP_CHECKER","DPe","PPL1"],"3CC-3050":["T-PROTEC","DPe","PPL2"],"3DC-3050":["TV","DPe","PPL2"],"3DB-3050":["TAB_VISS","DPe","PPL2"],"3DB-3051":["TAB_VISS","DPe","PPL2"],"2FA-3501":["MECALBI","DPe","PPL2"],"2FA-3511":["MECALBI","DPe","PPL2"],"2FA-3512":["MECALBI","DPe","PPL2"],"2ED-3100":["KABATEC","DPe","PPL2"],"2ED-3101":["KABATEC","DPe","PPL2"],"2ED-3102":["KABATEC","DPe","PPL2"],"1RG-3518":["SCHUNK","DPe","PPL1"],"1RG-3530":["SCHUNK","DPe","PPL2"],"1RG-3531":["SCHUNK","DPe","PPL2"],"1RG-3532":["SCHUNK","DPe","PPL2"],"2BE-3100":["EXPANDER","DPe","PPL2"],"2BE-3101":["EXPANDER","DPe","PPL2"],"2AC-3211":["ROTARY_LINE","DPe","Hab2"],"3CB-3251":["TE","DPe","Hab2"],"1RG-3533":["SCHUNK","DPe","Hab2"],"1RG-3534":["SCHUNK","DPe","Hab2"],"1RG-3535":["SCHUNK","DPe","Hab2"],"1RG-3536":["SCHUNK","DPe","Hab2"],"2FA-3513":["MECALBI","DPe","Hab2"],"2FA-3514":["MECALBI","DPe","Hab1"],"2BE-3102":["EXPANDER","DPe","Hab2"],"2BE-3103":["EXPANDER","DPe","Hab2"],"2BE-3104":["EXPANDER","DPe","Hab2"],"2BE-3105":["EXPANDER","DPe","Hab2"],"3CC-3037":["T-PROTEC","DPe","Hab2"],"3AA-3060":["Traction","DPe","Hab2"],"2ED-3103":["KABATEC","DPe","Hab2"],"2ED-3104":["TAIPING","DPe","Hab2"],"2ED-3105":["TAIPING","DPe","Hab2"],"3HA-3010":["TEST_ETANCHIETE","DPe","Hab2"],"2FA-3209":["MECALBI","DPe","Hab2"],"3CB-3252":["TE","DPe","PPL3"],"3DB-3060":["TAB_VISS","DPe","PPL3"],"CLC-251":["CLIP_CHECKER","DPe","PPL3"],"3CC-3041":["T-PROTEC","DPe","PPL3"],"3DB-3061":["TAB_VISS","DPe","PPL3"],"2AC-3037":["ROTARY_LINE","DPe","PPL3"],"1RG-3540":["SCHUNK","DPe","PPL3"],"1RG-3541":["SCHUNK","DPe","PPL3"],"1RG-3542":["SCHUNK","DPe","PPL3"],"2ED-3121":["KABATEC","DPe","PPL3"],"2ED-3122":["KABATEC","DPe","PPL3"],"2ED-3123":["KABATEC","DPe","PPL3"],"2FA-3021":["MECALBI","DPe","PPL3"],"2FA-3022":["MECALBI","DPe","PPL3"],"2FA-3023":["MECALBI","DPe","PPL3"],"2BE-3106":["EXPANDER","DPe","PPL3"],"2BE-3107":["EXPANDER","DPe","PPL3"],"2ED-3504":["TAIPING","K0","Hab2"],"1RG-3547":["SCHUNK","K0","Hab2"],"2AC-3038":["ROTARY_LINE","DPe","Hab3"],"3CB-3253":["TE","DPe","Hab3"],"CLC-252":["CLIP_CHECKER","DPe","Hab3"],"3CC-3042":["T-PROTEC","DPe","Hab3"],"1RG-3543":["SCHUNK","DPe","Hab3"],"1RG-3544":["SCHUNK","DPe","Hab3"],"1RG-3545":["SCHUNK","DPe","Hab3"],"1RG-3546":["SCHUNK","DPe","Hab3"],"2BE-3110":["EXPANDER","DPe","Hab3"],"2BE-3111":["EXPANDER","DPe","Hab3"],"2BE-3112":["EXPANDER","DPe","Hab3"],"2BE-3113":["EXPANDER","DPe","Hab3"],"2FA-3024":["MECALBI","DPe","Hab3"],"2FA-3025":["MECALBI","DPe","Hab3"],"2ED-3124":["TAIPING","DPe","Hab3"],"2ED-3125":["TAIPING","DPe","Hab3"],"2ED-3126":["TAIPING","DPe","Hab3"],"2ED-3217":["KABATEC","DPe","Hab3"],"3HA-3026":["TEST_ETANCHIETE","DPe","Hab3"],"2BE-3115":["EXPANDER","K0","PPL3"],"2BE-3116":["EXPANDER","K0","PPL2"],"2BE-3117":["EXPANDER","K0","PPL1"],"3AA-3061":["Traction","K0","Hab1"],"2ED-3127":["KABATEC","DPe","PPL1"],"3AA-3062":["Traction","K0","Hab3"],"1RG-3552":["SCHUNK","DPe","PPL1"],"1RG-3551":["SCHUNK","DPe","IP1"],"1RG-3550":["SCHUNK","DPe","PPL2"],"2ED-3129":["KABATEC","DPe","IP1"],"2FA-3515":["MECALBI","DPe","PPL2"],"2FA-3516":["MECALBI","DPe","PPL1"],"3AA-3063":["Traction C-TEC","K0","IP2"],"1RG-3554":["SCHUNK","K0","Hab3"],"2ED-3220":["TAIPING","K0","Hab3"],"2BE-3118":["EXPANDER","XJX","Mbloc4"],"1RG-3553":["SCHUNK","K0","PPL1"],"2ED-3098":["KABATEC","XJX","Mbloc3"],"3DC-3072":["TV","DPe","PPL3"],"2FA-3496":["MECALBI","K0","PPL1"],"2BE-3120":["EXPANDER","XJX","Mbloc1"],"JC-3056":["JIG_CHECKER","XJX","Smalls"],"1RG-3555":["SCHUNK","DPe","PPL3"],"JC-3057":["JIG_CHECKER","XJX","Smalls"],"JC-3058":["JIG_CHECKER","XJX","Smalls"],"CLC-260":["CLIP_CHECKER","XJX","Mbloc1"],"2JA-3004":["JIGBOARD","K0","IP1"],"4OA-3398":["PRINTER","K0","IP1"],"2JA-3183":["JIGBOARD","K0","IP2"],"4OA-3408":["PRINTER","K0","IP2"],"4OA-3409":["PRINTER","K0","IP2"],"4OA-3410":["PRINTER","K0","IP2"],"2JA-3182":["JIGBOARD","K0","PPL1"],"4OA-3414":["PRINTER","K0","PPL1"],"4OA-3415":["PRINTER","K0","PPL1"],"4OA-3416":["PRINTER","K0","PPL1"],"4OA-3417":["PRINTER","K0","PPL1"],"2KA-3043(1,2,..)":["PRESSE_BOUCHON","K0","PPL1"],"2JA-3017":["JIGBOARD","K0","Hab1"],"2JA-3018":["JIGBOARD","K0","PPL2"],"4OA-3027":["PRINTER","K0","PPL2"],"4OA-3026":["PRINTER","K0","PPL2"],"2JA-3027":["JIGBOARD","K0","Hab2"],"2JA-3107":["JIGBOARD","K0","Hab3"],"2JA-3003":["JIGBOARD","K0","PPL3"],"4OA-3213":["PRINTER","K0","PPL3"],"4OA-3225":["PRINTER","XJX","Mbloc1"],"4OA-3226":["PRINTER","XJX","Mbloc1"],"2JA-3190":["JIGBOARD","XJX","Mbloc1"],"4OA-3004":["PRINTER","XJX","Mbloc1"],"4OA-3007":["PRINTER","XJX","Mbloc1"],"2KA-3120(1-2-3-4-5)":["PRESSE_BOUCHON","XJX","Mbloc1"],"2JA-3036":["JIGBOARD","XJX","Mbloc2"],"4OA-3033":["PRINTER","XJX","Mbloc2"],"4OA-3034":["PRINTER","XJX","Mbloc2"],"4OA-3035":["PRINTER","XJX","Mbloc2"],"4OA-3036":["PRINTER","XJX","Mbloc2"],"2KA-3125(1-2-3-4-5)":["PRESSE_BOUCHON","XJX","Mbloc2"],"2JA-3191":["JIGBOARD","XJX","Mbloc5"],"4OA-3431":["PRINTER","XJX","Mbloc5"],"4OA-3432":["PRINTER","XJX","Mbloc5"],"4OA-3433":["PRINTER","XJX","Mbloc5"],"4OA-3434":["PRINTER","XJX","Mbloc5"],"4OA-3435":["PRINTER","XJX","Mbloc5"],"2KA-3130(1-2-3-4-5)":["PRESSE_BOUCHON","XJX","Mbloc5"],"2JA-3194":["JIGBOARD","XJX","Mbloc4"],"2JA-3195":["JIGBOARD","K0","PPL3"],"2JA-3196":["JIGBOARD","K0","PPL3"],"2JA-3197":["JIGBOARD","K0","PPL3"],"4OA-3453":["PRINTER","XJX","Mbloc4"],"4OA-3454":["PRINTER","XJX","Mbloc4"],"4OA-3455":["PRINTER","XJX","Mbloc4"],"4OA-3456":["PRINTER","XJX","Mbloc4"],"4OA-3457":["PRINTER","XJX","Mbloc4"],"2KA-3134(1-2-3-4-5)":["PRESSE_BOUCHON","XJX","Mbloc4"],"2JA-3200":["JIGBOARD","DPe","IP1"],"2JA-3202":["JIGBOARD","DPe","PPL1"],"2JA-3198":["JIGBOARD","XJX","Mbloc3"],"4OA-3460":["PRINTER","XJX","Mbloc3"],"4OA-3461":["PRINTER","XJX","Mbloc3"],"4OA-3462":["PRINTER","XJX","Mbloc3"],"4OA-3463":["PRINTER","XJX","Mbloc3"],"4OA-3464":["PRINTER","XJX","Mbloc3"],"2KA-3137(1-2-3-4-5)":["PRESSE_BOUCHON","XJX","Mbloc3"],"2JA-3201":["JIGBOARD","DPe","Hab1"],"2JA-3210":["JIGBOARD","DPe","PPL2"],"2JA-3211":["JIGBOARD","DPe","Hab2"],"2KA-3061-(1-2)":["PRESSE_BOUCHON","DPe","Hab2"],"2KA-3060(1-2-3...10)":["PRESSE_BOUCHON","DPe","PPL2"],"2JA-3037":["JIGBOARD","DPe","PPL3"],"2KA-3253(1-2-3...)":["PRESSE_BOUCHON","DPe","PPL3"],"2JA-3038":["JIGBOARD","DPe","Hab3"],"2KA-3254(1-2)":["PRESSE_BOUCHON","DPe","Hab3"],"3DC-3010":["TV","K0","Hab3"],"3DB-3010":["TV","K0","PPL3"],"2FA-3462":["MECALBI","K0","PPL1"]};
+
+var FAMILLE_ORDER = ['PPL1','PPL2','PPL3','Hab1','Hab2','Hab3','IP1','IP2','Mbloc1','Mbloc2','Mbloc3','Mbloc4','Mbloc5','Smalls'];
+function famIndex(fam) { var i = FAMILLE_ORDER.indexOf(fam); return i === -1 ? 99 : i; }
+
+var FAM_COLORS = {
+  'PPL1':'#e74c3c','PPL2':'#c0392b','PPL3':'#922b21',
+  'Hab1':'#2980b9','Hab2':'#1a6fa8','Hab3':'#154f78',
+  'IP1':'#27ae60','IP2':'#1e8449',
+  'Mbloc1':'#8e44ad','Mbloc2':'#7d3c98','Mbloc3':'#6c3483','Mbloc4':'#5b2c6f','Mbloc5':'#4a235a',
+  'Smalls':'#f39c12'
+};
+
+function capitalize(str) {
+  return str.toLowerCase().replace(/\w/g, function(c){ return c.toUpperCase(); });
+}
+
+function fillCodeSelect(prefix, projet, grouped) {
+  var sel = document.getElementById('sel-code');
+  sel.innerHTML = '<option value="">— Choisir le numéro —</option>';
+  if (!grouped[projet]) return;
+
+  var items = grouped[projet].slice().sort(function(a, b) {
+    var famA = DB[a.code] ? DB[a.code][2] : a.famille;
+    var famB = DB[b.code] ? DB[b.code][2] : b.famille;
+    var diff = famIndex(famA) - famIndex(famB);
+    if (diff !== 0) return diff;
+    return a.code < b.code ? -1 : a.code > b.code ? 1 : 0;
+  });
+
+  var byFam = {}, famOrder = [];
+  items.forEach(function(item) {
+    var fam = DB[item.code] ? DB[item.code][2] : item.famille;
+    if (!byFam[fam]) { byFam[fam] = []; famOrder.push(fam); }
+    byFam[fam].push(item);
+  });
+
+  famOrder.forEach(function(fam) {
+    var color = FAM_COLORS[fam] || '#555';
+
+    // Option séparateur coloré (disabled)
+    var sep = document.createElement('option');
+    sep.disabled = true;
+    sep.textContent = '■■■  ' + fam + '  ■■■';
+    sep.style.cssText = 'background:' + color + ';color:#ffffff;font-weight:900;font-size:13px;letter-spacing:2px;';
+    sel.appendChild(sep);
+
+    byFam[fam].forEach(function(item) {
+      var famDB = DB[item.code] ? DB[item.code][0] : item.famille;
+      var opt = document.createElement('option');
+      opt.value = item.code;
+      var shortName = famDB.substring(0, 7);
+      var displayName = shortName.length <= 2 ? shortName.toUpperCase() : shortName.charAt(0).toUpperCase() + shortName.slice(1).toLowerCase();
+      opt.textContent = item.code.toUpperCase() + ' - ' + displayName;
+      opt.style.cssText = 'color:#ffffff;background:#111d30;font-size:10px;font-weight:600;';
+      sel.appendChild(opt);
+    });
+  });
+}
+
+
+function onPrefixSelect(prefix) {
+  var step2 = document.getElementById('step2-bloc');
+  var sel   = document.getElementById('sel-code');
+  var res   = document.getElementById('eq-result');
+  document.getElementById('equip').value = '';
+  document.getElementById('nom-equip').value = '';
+  document.getElementById('projet').value = '';
+  document.getElementById('famille').value = '';
+  res.style.display = 'none';
+
+  // Afficher/masquer le bloc CP+Nature selon le préfixe
+  var blocCP = document.getElementById('bloc-cp-nature');
+  var prefixesAvecCP = ['3CB', 'CLC', 'JC'];
+  if (blocCP) {
+    if (prefixesAvecCP.indexOf(prefix) !== -1) {
+      blocCP.style.display = 'block';
+    } else {
+      blocCP.style.display = 'none';
+      // Réinitialiser les valeurs CP quand on cache le bloc
+      document.getElementById('cp-choix').value = '';
+      document.getElementById('cp-num-bloc').style.display = 'none';
+      document.getElementById('cp').value = '';
+      var naturePb = document.getElementById('nature-pb');
+      if (naturePb) naturePb.value = '';
+    }
+  }
+
+  if (!prefix || !PREFIXES[prefix]) { step2.style.display = 'none'; return; }
+  // Ordre des projets
+  var projetOrder = ['K0','DPe','XJX'];
+  var grouped = {};
+  PREFIXES[prefix].forEach(function(item) {
+    var p = item.projet;
+    if (!grouped[p]) grouped[p] = [];
+    grouped[p].push(item);
+  });
+  var allProjets = projetOrder.filter(function(p){ return grouped[p]; });
+  Object.keys(grouped).forEach(function(p){ if(allProjets.indexOf(p)===-1) allProjets.push(p); });
+
+  // Construire les onglets projet
+  var tabsDiv = document.getElementById('projet-tabs');
+  tabsDiv.innerHTML = '';
+  allProjets.forEach(function(projet, idx) {
+    var btn = document.createElement('button');
+    btn.textContent = projet;
+    btn.setAttribute('data-projet', projet);
+    btn.style.cssText = 'padding:10px 18px;font-size:14px;font-weight:700;border-radius:8px;border:2px solid #f39c12;background:' + (idx===0?'#f39c12':'#0d1a2e') + ';color:' + (idx===0?'#000':'#f39c12') + ';cursor:pointer;transition:all 0.2s;';
+    btn.onclick = function() {
+      // Mettre à jour style onglets
+      tabsDiv.querySelectorAll('button').forEach(function(b){ b.style.background='#0d1a2e'; b.style.color='#f39c12'; });
+      this.style.background='#f39c12'; this.style.color='#000';
+      // Remplir la liste
+      fillCodeSelect(prefix, projet, grouped);
+    };
+    tabsDiv.appendChild(btn);
+  });
+
+  // Afficher automatiquement le premier projet
+  fillCodeSelect(prefix, allProjets[0], grouped);
+  step2.style.display = 'block';
+  majMsg();
+}
+
+
+var NOM_AFFICHAGE = {
+  'TE': 'Test Électrique',
+  'CLIP_CHECKER': 'CLIP_CHECKER',
+  'MECALBI': 'Mecalbi',
+  'SCHUNK': 'Schunk',
+  'KABATEC': 'Kabatec',
+  'ROTARY_LINE': 'Rotary Line',
+  'EXPANDER': 'Expander',
+  'T-PROTEC': 'T-Protec',
+  'TAB_VISS': 'Tab Viss',
+  'TV': 'TV',
+  'TEST_ETANCHIETE': 'Test Etanchéité',
+  'JIGBOARD': 'Jigboard',
+  'PRESSE_BOUCHON': 'Presse Bouchon',
+  'PRINTER': 'Printer',
+  'JIG_CHECKER': 'Jig Checker',
+  'CLIP_GUN': 'Clip Gun',
+  'TAIPING': 'Taiping',
+  'YAESU': 'Yaesu',
+  'Traction C-TEC': 'Traction C-TEC',
+  'Traction': 'Traction',
+  'ROTARY_LINE-': 'Rotary Line'
+};
+function getNomAffichage(nom) {
+  return NOM_AFFICHAGE[nom] || nom;
+}
+
+function onCodeSelect(code) {
+  var res = document.getElementById('eq-result');
+  var selBloc = document.getElementById('selection-bloc');
+  document.getElementById('equip').value = '';
+  document.getElementById('nom-equip').value = '';
+  document.getElementById('projet').value = '';
+  document.getElementById('famille').value = '';
+  res.style.display = 'none';
+  if (selBloc) selBloc.style.display = 'block';
+  if (!code || !DB[code]) return;
+  var d = DB[code];
+  document.getElementById('equip').value     = code;
+  document.getElementById('nom-equip').value = getNomAffichage(d[0]);
+  document.getElementById('projet').value    = d[1];
+  document.getElementById('famille').value   = d[2];
+  document.getElementById('r-code').textContent = code;
+  document.getElementById('r-nom').textContent  = getNomAffichage(d[0]);
+  // Fill badges
+  var projBadge = document.getElementById('r-proj-badge');
+  var famBadge  = document.getElementById('r-fam-badge');
+  if (projBadge) projBadge.textContent = d[1];
+  if (famBadge)  famBadge.textContent  = d[2];
+  // Fill hidden compat fields
+  var projInput = document.getElementById('r-proj-input');
+  var famInput  = document.getElementById('r-fam-input');
+  if (projInput) projInput.value = d[1];
+  if (famInput)  famInput.value  = d[2];
+  // Masquer sélection, afficher résumé
+  if (selBloc) selBloc.style.display = 'none';
+  res.style.display = 'block';
+  majMsg();
+}
+
+// resetCode défini plus haut
+
+function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+function calcDuree(hdebut, hfin) {
+  if (!hdebut || !hfin) return { dureeStr: '', dtStr: '' };
+  var h1 = parseInt(hdebut.split(':')[0]), m1 = parseInt(hdebut.split(':')[1]);
+  var h2 = parseInt(hfin.split(':')[0]),   m2 = parseInt(hfin.split(':')[1]);
+  var diff = (h2 * 60 + m2) - (h1 * 60 + m1);
+  if (diff < 0) diff += 1440;
+  var h = Math.floor(diff / 60), m = diff % 60;
+  var dtStr = h > 0 ? (h + 'h' + (m > 0 ? m + 'min' : '')) : (m + 'min');
+  return { dureeStr: ' (' + dtStr + ')', dtStr: dtStr, total: diff };
+}
+
+function formatHeure(input) {
+  var v = input.value.replace(/[^0-9]/g, '');
+  if (v.length >= 3) v = v.substring(0,2) + ':' + v.substring(2,4);
+  input.value = v;
+}
+
+function parseMinutes(str) {
+  if (!str || str.length < 5) return -1;
+  var parts = str.split(':');
+  if (parts.length !== 2) return -1;
+  var h = parseInt(parts[0]), m = parseInt(parts[1]);
+  if (isNaN(h) || isNaN(m) || h > 23 || m > 59) return -1;
+  return h * 60 + m;
+}
+
+function validerHeures() {
+  var hdebut = document.getElementById('hdebut').value;
+  var hfin   = document.getElementById('hfin').value;
+  var alerte = document.getElementById('alerte-heures');
+  if (hdebut && hfin) {
+    var h1 = parseMinutes(hdebut);
+    var h2 = parseMinutes(hfin);
+    if (h1 < 0 || h2 < 0) return;
+    if (h2 <= h1) {
+      alerte.style.display = 'block';
+      document.getElementById('hfin').value = '';
+    } else {
+      alerte.style.display = 'none';
+    }
+  }
+}
+
+
+
+function toggleCP() {
+  var choix = document.getElementById('cp-choix').value;
+  var bloc = document.getElementById('cp-num-bloc');
+  var cpHidden = document.getElementById('cp');
+  if (choix === 'N/A') {
+    bloc.style.display = 'none';
+    cpHidden.value = 'N/A';
+    var lbl = document.getElementById('label-pb');
+    if (lbl) lbl.innerHTML = 'Problème constaté : Commentaire *';
+  } else if (choix === 'num') {
+    bloc.style.display = 'block';
+    cpHidden.value = '';
+    var lbl = document.getElementById('label-pb');
+    if (lbl) lbl.innerHTML = 'Problème constaté : Commentaire <span style="color:#94a3b8;font-size:11px;">(optionnel)</span>';
+    document.getElementById('cp-num').focus();
+  } else {
+    bloc.style.display = 'none';
+    cpHidden.value = '';
+  }
+}
+
+function envoyerWhatsApp() {
+  if (arrets.length === 0) {
+    alert('⚠️ Aucun arrêt enregistré !\nAjoute au moins un arrêt avant d\'envoyer.');
+    return;
+  }
+  var msg = buildMsg();
+  var url = 'https://wa.me/' + PHONE + '?text=' + encodeURIComponent(msg);
+  window.open(url, '_blank');
+}
+
+function updateRTPreview() {
+  var hdebut = document.getElementById('hdebut').value;
+  var hfin   = document.getElementById('hfin').value;
+  var wt     = parseInt(document.getElementById('wt').value) || 0;
+  var rtDiv  = document.getElementById('rt-display');
+  var rtVal  = document.getElementById('rt-value');
+  if (hdebut && hfin && parseMinutes(hdebut) >= 0 && parseMinutes(hfin) > parseMinutes(hdebut)) {
+    var dt = parseMinutes(hfin) - parseMinutes(hdebut);
+    var rt = dt - wt; if (rt < 0) rt = 0;
+    var fmt = function(v) { return v >= 60 ? Math.floor(v/60)+'h'+(v%60>0?(v%60)+'min':'') : v+'min'; };
+    rtVal.textContent = fmt(rt) + '  (DT: ' + fmt(dt) + ' − WT: ' + fmt(wt) + ')';
+    rtDiv.style.display = 'block';
+  } else {
+    rtDiv.style.display = 'none';
+  }
+}
+
+function copier() {
+  var ta = document.getElementById('zone-msg');
+  ta.focus(); ta.select(); ta.setSelectionRange(0, 99999);
+  var ok = false;
+  try { ok = document.execCommand('copy'); } catch(e) {}
+  if (ok) { confirmerCopie(); return; }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(ta.value).then(confirmerCopie).catch(function(){
+      alert('Appuie longuement sur le texte vert\npuis Tout selectionner puis Copier');
+    });
+    return;
+  }
+  alert('Appuie longuement sur le texte vert\npuis Tout selectionner puis Copier');
+}
+
+function confirmerCopie() {
+  var btn = document.getElementById('btn-copier');
+  btn.textContent = 'COPIE OK !';
+  btn.style.background = '#25d366'; btn.style.color = 'white'; btn.style.borderColor = '#25d366';
+  document.getElementById('msg-copie').style.display = 'block';
+  setTimeout(function(){
+    btn.textContent = '📋 COPIER LE MESSAGE';
+    btn.style.background = '#0a0a0a'; btn.style.color = '#00d4ff'; btn.style.borderColor = '#00d4ff';
+  }, 4000);
+}
+
+window.onload = function() {
+  try {
+    var t = new Date();
+    var yyyy = t.getFullYear();
+    var mm = pad(t.getMonth() + 1);
+    var dd = pad(t.getDate());
+    document.getElementById('date').value = yyyy + '-' + mm + '-' + dd;
+  } catch(e) {}
+  window._filteredEquips = [];
+  majMsg();
+};
+
+</script>
+</div>
+
+<script>
+const passwords = {
+  "Ys@28242":  "Yassin Ben Amar",
+  "Jh#13540":  "Jaouhar Ahmed",
+  "Mn$17292":  "Mounir",
+  "Ab!10085":  "Abdenaser",
+  "Bk@26790":  "Benkassem",
+  "As#15583":  "Abdesamad",
+  "Ak$11258":  "Abdeouakil",
+  "Rd!28317":  "Redouane",
+  "Lz@16922":  "Louizy",
+  "Mz#26788":  "Mouhsin Zemour",
+  "Es$13283":  "Essebahi",
+  "Ya!6846":   "Yassin Ahmadi",
+  "Ay@26438":  "Ayoub",
+  "Zk#18680":  "Zakaria",
+  "Yf$17537":  "Yassine Fartaj",
+  "Hm!28160":  "Hamid",
+  "Ml@28243":  "Melloul",
+  "Ab#8288":   "Abdslam",
+  "Ik$13278":  "Ikram",
+  "Ef!1569":   "El Fassi",
+  "Jo@2242":   "Jaoui",
+  "Ih#2728":   "Ihya",
+  "Kh$2697":   "Khlinssi",
+  "El!5623":   "Elamrani",
+  "Ad@22473":  "Abdali",
+  "jw2026":    "Jaouad"
+};
+
+function checkLogin() {
+  const pwd = document.getElementById('pwd-input').value.trim();
+  const nom = passwords[pwd];
+  if (nom) {
+    document.getElementById('login-page').style.display = 'none';
+    document.getElementById('app-page').style.display = 'block';
+    const techSelect = document.getElementById('tech');
+    if (techSelect) {
+      for (let i = 0; i < techSelect.options.length; i++) {
+        if (techSelect.options[i].text === nom) {
+          techSelect.selectedIndex = i;
+          techSelect.disabled = true;
+          if (typeof majMsg === 'function') majMsg();
+          break;
+        }
+      }
+    }
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+    document.getElementById('pwd-input').value = '';
+    document.getElementById('pwd-input').focus();
+  }
+}
+</script>
+</body>
+</html>
